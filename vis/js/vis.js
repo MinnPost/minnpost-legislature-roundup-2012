@@ -2,8 +2,14 @@ var bills = {"hf1021": {"title": "HF 1021", "companion": "sf700", "startDate": "
 
 var categories = {"education": [ "hf1021", "hf1022", "hf1021", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021" ], "health": [ "hf2111", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021", ], "taxes": ["hf1021","hf1021","hf1021","hf1021"] };
 
+var colorMap = {
+	"education": "#A6CEE3",
+	"health": "#1F78B4",
+	"taxes": "#B2DF8A"
+};
+
 var nodes = [];
-var width = 600;
+var width = 975;
 var height = 400;
 
 $(document).ready(function() {
@@ -21,9 +27,9 @@ function parseCategories() {
 			"id": category,
 			"count": count,
 			"name": category,
-			"x": (Math.random() * width), // TODO Do some math so bubbles are always fully in vis
-			"y": (Math.random() * height), // TODO same as above
-			"radius": 20 * Math.sqrt(count) // TODO get this constant out of here
+			"x": (Math.random() * width),
+			"y": (Math.random() * height),
+			"radius": 20 * Math.sqrt(count)
 		};
 		nodes.push(node);
 	}
@@ -43,23 +49,21 @@ function visCategories() {
 		.attr("cx", function(d) { return d.x; })
 		.attr("cy", function(d) { return d.y; })
 		.attr("cs", function(d) { return d.name; })
-		.attr("fill", "#beccae")
-		.attr("stroke", "#333") // TODO colors based on something else (category? size?)
+		.attr("fill", function(d) { return colorMap[d.id]; })
+		.attr("stroke", "#666")
 		.attr("stroke-width", 2)
 		.attr("opacity", 0.8)
 		.attr("r", function(d) { return d.radius / 2; })
+		.attr("r", 200)
 		.attr("charge", function(d) { return charge(d); })
-		.attr("text", function(d) { return d.name; }) // TODO show text labels
-		.text(function(d) { return d.name; })
 		.on("mouseover", function(d, i) { d3.select(this)
+		// FIXME hover over text doesn't work .. may not be a solution for this
 				.style("stroke-width", 3)
 				.style("opacity", 1.0);
-				//showDetails(d, i);
 			})
 		.on("mouseout", function(d, i) { d3.select(this)
 				.style("stroke-width", 2)
 				.style("opacity", 0.8);
-				//showDetails(d, i);
 			})
 		.on("mousedown", function(d, i) { listBills(d); });
 	
@@ -73,8 +77,20 @@ function visCategories() {
 			circles
 				.attr("cx", function(d) { return d.x; })
 				.attr("cy", function(d) { return d.y; });
+			labels	
+				.attr("x", function(d) { return d.x; })
+				.attr("y", function(d) { return d.y; });
 		})
 		.start();
+	
+	var labels = vis.selectAll("text")
+		.data(nodes)
+		.enter()
+		.append("text")
+		.text(function(d) { return d.name; })
+		.attr("text-anchor", "middle")
+		.attr("x", function(d) { return d.x; })
+		.attr("y", function(d) { return d.y; });
 }
 
 function listBills(d) {
@@ -87,18 +103,11 @@ function listBills(d) {
 			.append("<div id='bill-vote'>" + bill.voteFor + " - " + bill.voteAgainst + "</div>")
 			.append("<div id='bill-timeline'>" + bill.startDate + "|----------------|" + bill.endDate + "</div>")
 			.append("<div id='bill-short-description'>" + bill.shortDescription + "</div>");
+			// TODO fix this timeline
 	}
 }
 
 function charge(d) {
 	return - Math.pow(d.radius, 2.0) / (d.radius / 10);
-}
-
-function showDetails(d, i) { // TODO make these show/hide tooltips?
-	console.log("show");
-}
-
-function hideDetails(d, i) {
-	console.log("hide");
 }
 
