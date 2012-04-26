@@ -123,17 +123,18 @@ function listBills(d) {
 	for (var i in categories[d.id]) {
 		var bill = bills[categories[d.id][i]];
 		console.log(bill);
-		$("#bill-list").append("<div id='bill-title'><a href='#' onclick='showBillDetail('" + categories[d.id][i] + "')'>" + bill.title + "</a></div>")
-			.click(showBillDetail(bill));
+		$("#bill-list").append("<div id='bill-title'><a id='" + categories[d.id][i] + "' href='#' onclick=showBillDetail('" + categories[d.id][i] + "')>" + bill.title + "</a></div>");
 	}
 }
 
 function showBillDetail(id) {
 		var bill = bills[id];
-		console.log('show detail');
+		console.log(bill);
 		$("#bill-detail").html("<div id='bill-vote'>" + bill.voteFor + " - " + bill.voteAgainst + "</div>")
 			.append("<div id='bill-timeline'>" + bill.startDate + "|----------------|" + bill.endDate + "</div>")
 			.append("<div id='bill-short-description'>" + bill.shortDescription + "</div>");
+		$('.bill-link-selected').removeClass("bill-link-selected");
+		$('#' + id).addClass("bill-link-selected");
 		return false;
 }
 

@@ -40,6 +40,32 @@
 	float: right;
 	border-left: 1px solid #ccc;
 }
+.bill-link-selected {
+	background-color: #ccc;
+}
+#bill-header {
+	font-size: 3em;
+	line-height: 2em;
+}
+#bill-icon {
+	float: left;
+}
+#bill-id {
+	font-size: 1.5em;
+}
+#bill-authors {
+	float: left;
+}
+#bill-authors-list {
+	list-style: none;
+}
+#bill-vote {
+	float: right;
+}
+#bill-vote-numbers {
+	font-size: 4em;
+	line-height: 1em;
+}
 
 </style>
 
@@ -56,6 +82,21 @@
 	<div id="bill-list" class="vis-section">
 	</div>
 	<div id="bill-detail" class="vis-section">
+		<div id="bill-header">
+			<div id="bill-icon">[icon]</div>
+			<div id="bill-title">Agriculture</div>
+		</div>
+		<div id="bill-id">HB3143</div>
+		<div id="bill-timeline">----|----------|-- [fancy graphic]</div>
+		<div id="bill-description">Lorem ipsum dolor sit amet, maiores ornare ac fermentum, im perdiet ut vivamus a, nam lectus at nunc.Lorem ipsum dolor sit amet, maiores ornare ac fermentum, im perdiet ut vivamus a, nam lectus at nunc.</div>
+		<div id="bill-authors">
+			<ul id="bill-authors-list">
+				<li>John Doe</li>
+				<li>Jane Doe</li>
+				<li>Bob Dole</li>
+			</ul>
+		</div>
+		<div id="bill-vote">Final vote<div id="bill-vote-numbers">100-32</div></div>
 	</div>
 
 </div>
