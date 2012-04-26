@@ -122,20 +122,34 @@ function listBills(d) {
 	$("#bill-list").html("");
 	for (var i in categories[d.id]) {
 		var bill = bills[categories[d.id][i]];
-		console.log(bill);
-		$("#bill-list").append("<div id='bill-title'><a id='" + categories[d.id][i] + "' href='#' onclick=showBillDetail('" + categories[d.id][i] + "')>" + bill.title + "</a></div>");
+		$("#bill-list").append("<div id='bill-list-title'><a id='" + categories[d.id][i] + "' href='#' onclick=showBillDetail('" + categories[d.id][i] + "')>" + bill.title + "</a></div>");
 	}
 }
 
 function showBillDetail(id) {
 		var bill = bills[id];
 		console.log(bill);
-		$("#bill-detail").html("<div id='bill-vote'>" + bill.voteFor + " - " + bill.voteAgainst + "</div>")
-			.append("<div id='bill-timeline'>" + bill.startDate + "|----------------|" + bill.endDate + "</div>")
-			.append("<div id='bill-short-description'>" + bill.shortDescription + "</div>");
+		console.log(bill.title);
+		console.log(bill.voteFor);
+		$("#bill-title").html(bill.title);
+		//$("bill-timeline").html();
+		$("#bill-description").html(bill.longDescription);
+		authorsHtml = "<ul>";
+		for (var i in bill.legislators) {
+			authorsHtml += "<li>" + bill.legislators[i] + "</li>";
+		}
+		authorsHtml += "</ul>";
+		$("#bill-authors-list").html(authorsHtml);
+		$("#bill-vote-numbers").html(bill.voteFor + " - " + bill.voteAgainst);
+
 		$('.bill-link-selected').removeClass("bill-link-selected");
 		$('#' + id).addClass("bill-link-selected");
+		createTimeline(bill);
 		return false;
+}
+
+function createTimeline(bill) {
+		//TODO
 }
 
 // This denotes how much negative magnetism each node will have
