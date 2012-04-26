@@ -24,7 +24,21 @@
 	width: 975px;
 }
 .vis-section {
-	border: 1px solid #ccc;
+	border: 1px solid #eee;
+}
+#bubble-chooser {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 10px;
+}
+#bill-list {
+	width: 200px;
+	float: left;
+	margin-right: 10px;
+}
+#bill-detail {
+	width: 760px;
+	float: right;
+	border-left: 1px solid #ccc;
 }
 
 </style>
@@ -32,15 +46,16 @@
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
 
 	<div id="overview" class="vis-section">
-		<h1>Overview graphics</h1>
+		<h1>Interactive: Bills passed in 2011-2012 session</h1>
 		<div id="overview-chart"></div>
 	</div>
 	<div id="bubble-chooser" class="vis-section">
-		<h1>Bubble chooser</h1>
 		<div id="bubble-chooser-chart"></div>
 	</div>
+	<div id="category-title" class="vis-section"></div>
 	<div id="bill-list" class="vis-section">
-		<h1>Bill list</h1>
+	</div>
+	<div id="bill-detail" class="vis-section">
 	</div>
 
 </div>

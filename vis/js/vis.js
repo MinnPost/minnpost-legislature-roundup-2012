@@ -1,6 +1,31 @@
-var bills = {"hf1021": {"title": "HF 1021", "companion": "sf700", "startDate": "3/20/12", "endDate": "4/12/12", "veto": false, "voteFor": 101, "voteAgainst": 34, "legislators": [ "bills", "zeller" ], "shortDescription": "A bill to decrease state funding to private schools", "longDescription": "A bill to decrease state funding to private schools. A bill to decrease state funding to private schools. A bill to decrease state funding to private schools."}};
+var bills = {
+	"hf1021": {
+			"title": "HF 1021",
+			"companion": "sf700",
+			"startDate": "3/20/12",
+			"endDate": "4/12/12",
+			"veto": false,
+			"voteFor": 101,
+			"voteAgainst": 34,
+			"legislators": [ "bills", "zeller" ],
+			"shortDescription": "A bill to decrease state funding to private schools",
+			"longDescription": "A bill to decrease state funding to private schools. A bill to decrease state funding to private schools. A bill to decrease state funding to private schools."
+	},
+	"hf1011": {
+		"title": "HF 1011",
+		"companion": "sf760",
+		"startDate": "8/20/11",
+		"endDate": "3/12/12",
+		"veto": false,
+		"voteFor": 80,
+		"voteAgainst": 42,
+		"legislators": [ "smith", "zeller" ],
+		"shortDescription": "A bill to find volunteer basket holders.",
+		"longDescription": "A bill to find volunteer basket holders. A bill to find volunteer basket holders. A bill to find volunteer basket holders. A bill to find volunteer basket holders."
+	}
+};
 
-var categories = {"education": [ "hf1021", "hf1022", "hf1021", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021" ], "health": [ "hf2111", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021", ], "taxes": ["hf1021","hf1021","hf1021","hf1021"] };
+var categories = {"education": [ "hf1021", "hf1011", "hf1021", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021" ], "health": [ "hf2011", "hf1021","hf1021","hf1021","hf1021","hf1021","hf1021","hf1021", ], "taxes": ["hf1021","hf1011","hf1021","hf1021"] };
 
 var colorMap = {
 	"education": "#A6CEE3",
@@ -15,7 +40,6 @@ var height = 400;
 $(document).ready(function() {
 	parseCategories();
 	visCategories();
-	//compareMF();
 });
 
 function parseCategories() {
@@ -94,20 +118,27 @@ function visCategories() {
 }
 
 function listBills(d) {
-	$("#bill-list").html("<h1>" + d.name + "</h1>");
-	
+	$("#category-title").html("<h1>" + d.name + "</h1>");
+	$("#bill-list").html("");
 	for (var i in categories[d.id]) {
 		var bill = bills[categories[d.id][i]];
 		console.log(bill);
-		$("#bill-list").append("<div id='bill-title'><h2>" + bill.title + "</h2></div>")
-			.append("<div id='bill-vote'>" + bill.voteFor + " - " + bill.voteAgainst + "</div>")
-			.append("<div id='bill-timeline'>" + bill.startDate + "|----------------|" + bill.endDate + "</div>")
-			.append("<div id='bill-short-description'>" + bill.shortDescription + "</div>");
-			// TODO fix this timeline
+		$("#bill-list").append("<div id='bill-title'><a href='#' onclick='showBillDetail('" + categories[d.id][i] + "')'>" + bill.title + "</a></div>")
+			.click(showBillDetail(bill));
 	}
 }
 
+function showBillDetail(id) {
+		var bill = bills[id];
+		console.log('show detail');
+		$("#bill-detail").html("<div id='bill-vote'>" + bill.voteFor + " - " + bill.voteAgainst + "</div>")
+			.append("<div id='bill-timeline'>" + bill.startDate + "|----------------|" + bill.endDate + "</div>")
+			.append("<div id='bill-short-description'>" + bill.shortDescription + "</div>");
+		return false;
+}
+
+// This denotes how much negative magnetism each node will have
 function charge(d) {
-	return - Math.pow(d.radius, 2.0) / (d.radius / 10);
+	return - Math.pow(d.radius, 2.0) / 6;
 }
 
