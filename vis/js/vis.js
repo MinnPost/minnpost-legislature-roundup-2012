@@ -68,7 +68,7 @@ function visCategories() {
 		.attr("class", "bubble");
 	
 	var circles = vis.selectAll("circle")
-		.data(nodes, function(d) { console.log(d);return d.id; })
+		.data(nodes, function(d) { return d.id; })
 		.enter().append("circle")
 		.attr("cx", function(d) { return d.x; })
 		.attr("cy", function(d) { return d.y; })
@@ -148,8 +148,50 @@ function showBillDetail(id) {
 		return false;
 }
 
+var legStartDate = Date.parse(1/24/12);
+var legEndDate = Date.parse(4/21/12);
+
+var timelineWidth = 400;
+var timelineHeight = 100;
+
 function createTimeline(bill) {
-		//TODO
+	$("#bill-timeline").html("");
+	var nodes = [];
+	var node = {
+		"id": "legStartDate",
+		"x": 0,
+		"y": timelineHeight / 2
+	};
+	nodes.push(node);
+	node = {
+		"id": "legEndDate",
+		"x": timelineWidth - 5, //TODO take this constant out
+		"y": timelineHeight / 2
+	};
+	nodes.push(node);
+
+	var startDate = Date.parse(bill.startDate);
+	var endDate = Date.parse(bill.endDate);
+
+	var startFromLegStart = daysFromLegStart(startDate);
+	var endFromLegStart = daysFromLegStart(endDate);
+
+	var chart = d3.select("#bill-timeline").append("svg")
+		.attr("class", "chart")
+		.attr("width", 400)
+		.attr("height", 100);
+	
+	var rects = chart.selectAll("rect")
+		.data(nodes, function(d) { return d.id; })
+		.enter().append("rect")
+		.attr("height", 20)
+		.attr("width", 5)
+		.attr("y", function(d) { return d.y; })
+		.attr("x", function(d) { return d.x; });
+}
+
+function daysFromLegStart(theDate) {
+	return theDate - legStartDate;
 }
 
 // This denotes how much negative magnetism each node will have
