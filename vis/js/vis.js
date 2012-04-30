@@ -62,7 +62,7 @@ function parseCategories() {
 function visCategories() {
 	// A function to create a bubble chart out of the categories of bills.
 
-	var vis = d3.select("#bubble-chooser-chart").append("svg")
+	var vis = d3.select("#bubble-chart").append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		.attr("class", "bubble");
