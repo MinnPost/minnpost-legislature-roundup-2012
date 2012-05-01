@@ -15,51 +15,30 @@
 </head>
 <body class="front logged-in page-home one-sidebar sidebar-right admin-nw admin-vertical admin-df  one-sidebar sidebar-right">
 
-<h1>Interactive: Bills passed in 2011-2012 session</h1>
+<h1 style="text-align: center;">Interactive: Bills passed in 2011-2012 session</h1>
+
 <!-- Embed Start -->
 <style type="text/css">
-
+/**
+ * Layout
+ */
 #minnpost-legislature-wrapper {
-	margin: auto;
-	width: 975px;
+  margin: auto;
+  width: 975px;
+} 
+#bills-list-container {
+  width: 20%;
+  float: left;
 }
-.vis-section {
-	border: 1px solid #eee;
+#bill-category-container {
+  width: 80%;
+  float: left;
 }
-#bubble-chooser {
-	border-bottom: 1px solid #ccc;
-	margin-bottom: 10px;
-}
-#bill-list {
-	width: 200px;
-	float: left;
-	margin-right: 10px;
-}
-#bill-detail {
-	width: 760px;
-	float: right;
-	border-left: 1px solid #ccc;
-}
-.bill-link-selected {
-	background-color: #ccc;
-}
-#category-header {
-	font-size: 3em;
-	line-height: 2em;
-}
-#category-icon {
-	float: left;
-}
-#bill-id {
-	font-size: 1.5em;
-}
-#bill-authors {
-	float: left;
-}
-#bill-vote {
-	float: right;
-}
-#bill-vote-numbers {
+
+/**
+ * Bills
+ */
+.bill-votes div {
 	font-size: 4em;
 	line-height: 1.2em;
 }
@@ -75,66 +54,67 @@
 		<div id="bubble-chart"></div>
 	</div>
 	
-	
-	<div id="bill-category-container"></div>
-	<div id="bills-list-container"></div>
-	<div id="bill-detail-container"></div>
-
-	
-	<!-- Templates to be used in client side processing. -->
-  
-	<!-- Template for bill list -->
-  <script id="template-bill-list" type="text/template">
-    <h4>Bills</h4>
-    <ul>
-      <% _.each( bills, function( b ) { %>
-        <li><a class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
-      <% }); %>
-    </ul>
-  </script>
-  
-	<!-- Template for bill details -->
-	<script id="template-bill" type="text/template">
-		<h4 class="bill-title"><%= bill.get('title') %> (<a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %>)</a></h4>
-		<div class="bill-timeline"></div>
-		<div class="bill-description"></div>
-		
-		<div class="bill-house-sponsors">
-		  <h5>House Sponsors</h5>
-			<ul>
-        <% _.each( bill.get('house_sponsors'), function( s ) { %>
-				  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-        <% }); %>
-			</ul>
-		</div>
-		<div class="bill-senate-sponsors">
-		  <h5>Senate Sponsors</h5>
-			<ul>
-        <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-				  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-        <% }); %>
-			</ul>
-		</div>
-		
-		<div class="bill-house-votes">
-		  <h5>House Votes</h5>
-		  <%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %>
-		</div>
-		<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
-		  <div class="bill-senate-votes">
-		    <h5>Senate Votes</h5>
-		    <%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %>
-		  </div>
-		<% } %>
-	</script>
-	
-	<!-- Template for category -->
-  <script id="template-category" type="text/template">
-    <h3>Agriculture</h3>
-	</script>
-	<!-- End templates -->
+	<div id="category-details">
+  	<div id="bills-list-container"></div>
+  	<div id="bill-category-container"></div>
+  	<div id="bill-detail-container"></div>
+	</div>
 
 </div>
+	
+<!-- Templates to be used in client side processing. -->
+
+<!-- Template for bill list -->
+<script id="template-bill-list" type="text/template">
+  <h4>Bills</h4>
+  <ul>
+    <% _.each( bills, function( b ) { %>
+      <li><a class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
+    <% }); %>
+  </ul>
+</script>
+
+<!-- Template for bill details -->
+<script id="template-bill" type="text/template">
+	<h4 class="bill-title"><%= bill.get('title') %> (<a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %>)</a></h4>
+	<div class="bill-timeline"></div>
+	<div class="bill-description"></div>
+	
+	<div class="bill-house-sponsors">
+	  <h5>House Sponsors</h5>
+		<ul>
+      <% _.each( bill.get('house_sponsors'), function( s ) { %>
+			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+      <% }); %>
+		</ul>
+	</div>
+	<div class="bill-senate-sponsors">
+	  <h5>Senate Sponsors</h5>
+		<ul>
+      <% _.each( bill.get('senate_sponsors'), function( s ) { %>
+			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+      <% }); %>
+		</ul>
+	</div>
+	
+	<div class="bill-house-votes bill-votes">
+	  <h5>House Votes</h5>
+	  <%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %>
+	</div>
+	<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
+	  <div class="bill-senate-votes bill-votes">
+	    <h5>Senate Votes</h5>
+	    <%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %>
+	  </div>
+	<% } %>
+</script>
+
+<!-- Template for category -->
+<script id="template-category" type="text/template">
+  <h3>Agriculture</h3>
+</script>
+<!-- End templates -->
+
 
 <!-- Check for jQuery as it is included in MinnPost site. -->
 <script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/bubbletree-master-20120410/lib/jquery-1.5.2.min.js"><\/script>')</script>
