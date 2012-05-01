@@ -19,6 +19,10 @@
 
 <!-- Embed Start -->
 <style type="text/css">
+#category-details {
+  display: none;
+}
+
 /**
  * Layout
  */
@@ -26,37 +30,45 @@
   margin: auto;
   width: 975px;
 } 
+#bill-category-container {
+  width: 100%;
+}
 #bills-list-container {
   width: 20%;
   float: left;
 }
-#bill-category-container {
+#bill-detail-container {
   width: 80%;
   float: left;
 }
+
 
 /**
  * Bills
  */
 .bill-votes div {
-	font-size: 4em;
-	line-height: 1.2em;
+	font-size: 2em;
+	line-height: 1.5em;
+}
+.bill-id {
+  margin-bottom: 1em;
+}
+.bill-house,
+.bill-senate {
+  width: 50%;
+  float: left;
 }
 </style>
 
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
-
-	<div id="overview" class="vis-section">
-		<div id="overview-chart"></div>
-	</div>
 	
 	<div id="bubble-chooser" class="vis-section">
 		<div id="bubble-chart"></div>
 	</div>
 	
 	<div id="category-details">
-  	<div id="bills-list-container"></div>
   	<div id="bill-category-container"></div>
+  	<div id="bills-list-container"></div>
   	<div id="bill-detail-container"></div>
 	</div>
 
@@ -76,42 +88,54 @@
 
 <!-- Template for bill details -->
 <script id="template-bill" type="text/template">
-	<h4 class="bill-title"><%= bill.get('title') %> (<a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %>)</a></h4>
-	<div class="bill-timeline"></div>
-	<div class="bill-description"></div>
-	
-	<div class="bill-house-sponsors">
-	  <h5>House Sponsors</h5>
-		<ul>
-      <% _.each( bill.get('house_sponsors'), function( s ) { %>
-			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-      <% }); %>
-		</ul>
-	</div>
-	<div class="bill-senate-sponsors">
-	  <h5>Senate Sponsors</h5>
-		<ul>
-      <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-      <% }); %>
-		</ul>
-	</div>
-	
-	<div class="bill-house-votes bill-votes">
-	  <h5>House Votes</h5>
-	  <%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %>
-	</div>
-	<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
-	  <div class="bill-senate-votes bill-votes">
-	    <h5>Senate Votes</h5>
-	    <%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %>
-	  </div>
-	<% } %>
+  <h4 class="bill-title"><%= bill.get('title') %></h4>
+  <div class="bill-id"><a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %></a></div>
+  <div class="bill-timeline"></div>
+  <div class="bill-description"></div>
+  
+  <div class="bill-house">
+    <h5>House</h5>
+  	<% if (typeof bill.get('house_ayes') != 'undefined') { %>
+    	<div class="bill-house-votes bill-votes">
+    	  <h6>House Votes</h6>
+    	  <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
+    	</div>
+  	<% } %>
+  	
+  	<div class="bill-house-sponsors">
+  	  <h6>House Sponsors</h6>
+  		<ul>
+        <% _.each( bill.get('house_sponsors'), function( s ) { %>
+  			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+        <% }); %>
+  		</ul>
+  	</div>
+  </div>
+
+  <div class="bill-senate">
+    <h5>Senate</h5>
+  	<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
+  	  <div class="bill-senate-votes bill-votes">
+  	    <h6>Senate Votes</h6>
+  	    <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
+  	  </div>
+  	<% } %>
+  	
+    <div class="bill-senate-sponsors">
+  	  <h6>Senate Sponsors</h6>
+  		<ul>
+        <% _.each( bill.get('senate_sponsors'), function( s ) { %>
+  			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+        <% }); %>
+  		</ul>
+  	</div>
+  </div>
 </script>
 
 <!-- Template for category -->
 <script id="template-category" type="text/template">
-  <h3>Agriculture</h3>
+  <a class="all-categories" href="#all-categories">Back to all categories</a>
+  <h3><%= category %></h3>
 </script>
 <!-- End templates -->
 
