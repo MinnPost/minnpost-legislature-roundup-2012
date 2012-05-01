@@ -4,10 +4,8 @@
   $(document).ready(function() {
   
     // Create basic models for bills and categories
-    var Category = Backbone.Model.extend({
-    });
-    var Bill = Backbone.Model.extend({
-    });
+    var Category = Backbone.Model.extend();
+    var Bill = Backbone.Model.extend();
     
     // Collections
     var Bills = Backbone.Collection.extend({
@@ -15,7 +13,10 @@
       
       filterCategory: function (category) {
         return this.filter(function (bill) {
-          return bill.get('category') == category; 
+          var found = _.filter(bill.get('categories'), function(c) {
+            return c == category;
+          });
+          return !_.isEmpty(found);
         });
       }
     });
@@ -46,7 +47,7 @@
     
       initialize: function(d) {
         // Every function that uses 'this' as the current object should be in here
-        _.bindAll(this, 'render', 'showBill');
+        _.bindAll(this, 'render', 'showBill', 'filterCategory');
         
         this.collection = d.collection || new Bills();
       },
@@ -62,26 +63,39 @@
       showBill: function(e) {
         e.preventDefault();
         var thisElem = $(e.currentTarget);
-        var billView = new BillView({ el: $('#bill-detail-container'), model: this.collection.getByCid(thisElem.attr('data-id')) });
+        this.billView = this.billView || new BillView({ el: $('#bill-detail-container') });
+        this.billView.model = this.collection.getByCid(thisElem.attr('data-id'));
+        this.billView.render();
         return this;
+      },
+      
+      showCategory: function(category) {
+        // Render template
+        var template = _.template($("#template-category").html(), { category: category });
+        $('#bill-category-container').html(template);
+      },
+      
+      filterCategory: function(category) {
+        this.collection.reset(this.collection.filterCategory(category));
+        this.showCategory(category);
+        this.render();
       }
     });
     
     // Process bill data
     $.getJSON('data/bills.json', function(data) {
+      console.log(data);
       // Create bills collection
       var bills = new Bills();
       for (var i in data) {
         data[i].bill = i;
         bills.add(new Bill(data[i]));
-        
-        var billView = new BillView({ el: $('#bill-detail-container'), model: new Bill(data[i]) });
-        billView.render();
       }
       
       // Handle list of bills
       var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
       billList.render();
+      billList.filterCategory('Judiciary');
     });
   
   });
