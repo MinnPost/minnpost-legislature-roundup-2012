@@ -1,5 +1,6 @@
-Minnesota state legislative roundup
+Minnesota state legislative roundup.  The goal of this project is to create a visualization
+that explores the bills of the Legislative Session 87 (2011-2012).
 
-(View BaseCamp thread)[https://basecamp.com/1763914/projects/32544-minnpost/messages/1742355-legislature-close]
+## Technologies used
 
-Many thanks to [Jim Vallandingham](http://vallandingham.me/bubble_charts_in_d3.html) for his post on bubble charts in D3.js
+ - Many thanks to [Jim Vallandingham](http://vallandingham.me/bubble_charts_in_d3.html) for his post on bubble charts in D3.js
