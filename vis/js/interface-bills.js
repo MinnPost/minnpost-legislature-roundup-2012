@@ -11,20 +11,29 @@
     
     // Collections
     var Bills = Backbone.Collection.extend({
-      model: Bill
+      model: Bill,
+      
+      filterCategory: function (category) {
+        return this.filter(function (bill) {
+          return bill.get('category') == category; 
+        });
+      }
     });
     
     // Single bill view.
-    var BillView = Backbone.View.extend({    
-      el: $('#bill-container'),
-    
-      initialize: function() {
+    var BillView = Backbone.View.extend({
+      initialize: function(d) {
         // Every function that uses 'this' as the current object should be in here
         _.bindAll(this, 'render');
+        
+        this.model = d.model || new Bill();
+        this.render();
       },
 
       render: function() {
-        $(this.el).html('');
+        // Render template
+        var template = _.template($("#template-bill").html(), { bill: this.model });
+        $(this.el).html(template);
         return this;
       }
     });
@@ -39,7 +48,7 @@
         // Every function that uses 'this' as the current object should be in here
         _.bindAll(this, 'render', 'showBill');
         
-        this.collection = d.bills || new Bills();
+        this.collection = d.collection || new Bills();
       },
 
       render: function() {
@@ -51,10 +60,7 @@
       },
       
       showBill: function(bill) {
-        var billView = new BillView({
-          model: bill
-        });
-        $(this.el).html(billView.render().el);
+        var billView = new BillView({ el: $('#bill-detail-container'), model: bill });
         return this;
       }
     });
@@ -66,10 +72,13 @@
       for (var i in data) {
         data[i].bill = i;
         bills.add(new Bill(data[i]));
+        
+        var billView = new BillView({ el: $('#bill-detail-container'), model: new Bill(data[i]) });
+        billView.render();
       }
       
       // Handle list of bills
-      var billList = new BillsListView({el: $('#bills-list-container'), bills: bills });
+      var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
       billList.render();
     });
   

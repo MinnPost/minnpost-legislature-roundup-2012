@@ -82,36 +82,53 @@
 
 	
 	<!-- Templates to be used in client side processing. -->
-  <script id="template-category" type="text/template">
   
-  </script>
-  
+	<!-- Template for bill list -->
   <script id="template-bill-list" type="text/template">
+    <h4>Bills</h4>
     <ul>
       <% _.each( bills, function( b ) { %>
-        <li><%= b.get('bill') %></li>
+        <li><a class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
       <% }); %>
     </ul>
   </script>
   
+	<!-- Template for bill details -->
 	<script id="template-bill" type="text/template">
-		<div id="category-header">
-			<div id="category-icon">[icon]</div>
-			<div id="category-title">Agriculture</div>
-		</div>
-		<div id="bill-title">HB3143</div>
-		<div id="bill-timeline">----|----------|-- [fancy graphic]</div>
-		<div id="bill-description">Lorem ipsum dolor sit amet, maiores ornare ac fermentum, im perdiet ut vivamus a, nam lectus at nunc.Lorem ipsum dolor sit amet, maiores ornare ac fermentum, im perdiet ut vivamus a, nam lectus at nunc.</div>
-		<div id="bill-authors">
-			<ul id="bill-authors-list">
-				<li>John Doe</li>
-				<li>Jane Doe</li>
-				<li>Bob Dole</li>
+		<h4 class="bill-title"><%= bill.get('title') %> (<a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %>)</a></h4>
+		<div class="bill-timeline"></div>
+		<div class="bill-description"></div>
+		
+		<div class="bill-house-sponsors">
+		  <h5>House Sponsors</h5>
+			<ul>
+        <% _.each( bill.get('house_sponsors'), function( s ) { %>
+				  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+        <% }); %>
 			</ul>
 		</div>
-		<div id="bill-vote">Final vote<div id="bill-vote-numbers">100-32</div></div>
+		<div class="bill-senate-sponsors">
+		  <h5>Senate Sponsors</h5>
+			<ul>
+        <% _.each( bill.get('senate_sponsors'), function( s ) { %>
+				  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+        <% }); %>
+			</ul>
+		</div>
+		
+		<div class="bill-house-votes">
+		  <h5>House Votes</h5>
+		  <%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %>
+		</div>
+		<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
+		  <div class="bill-senate-votes">
+		    <h5>Senate Votes</h5>
+		    <%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %>
+		  </div>
+		<% } %>
 	</script>
 	
+	<!-- Template for category -->
   <script id="template-category" type="text/template">
     <h3>Agriculture</h3>
 	</script>
