@@ -76,11 +76,25 @@
 	</div>
 	
 	
+	<div id="bill-category-container"></div>
+	<div id="bills-list-container"></div>
+	<div id="bill-detail-container"></div>
+
 	
-	<div id="category-title" class="vis-section"></div>
-	<div id="bill-list" class="vis-section">
-	</div>
-	<div id="bill-detail" class="vis-section">
+	<!-- Templates to be used in client side processing. -->
+  <script id="template-category" type="text/template">
+  
+  </script>
+  
+  <script id="template-bill-list" type="text/template">
+    <ul>
+      <% _.each( bills, function( b ) { %>
+        <li><%= b.get('bill') %></li>
+      <% }); %>
+    </ul>
+  </script>
+  
+	<script id="template-bill" type="text/template">
 		<div id="category-header">
 			<div id="category-icon">[icon]</div>
 			<div id="category-title">Agriculture</div>
@@ -96,15 +110,10 @@
 			</ul>
 		</div>
 		<div id="bill-vote">Final vote<div id="bill-vote-numbers">100-32</div></div>
-	</div>
-
-	
-	<!-- Templates to be used in client side processing. -->
-	<script id="template-category" type="text/template">
-	
 	</script>
-	<script id="template-bill" type="text/template">
 	
+  <script id="template-category" type="text/template">
+    <h3>Agriculture</h3>
 	</script>
 	<!-- End templates -->
 
