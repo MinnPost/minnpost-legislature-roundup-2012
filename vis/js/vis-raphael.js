@@ -37,6 +37,24 @@ $(document).ready(function() {
     $('#bubble-chooser').slideDown('fast');
     $('#category-details').slideUp('fast');
   });
+  
+  // Tabs
+  $('.by-category').click(function(e) {
+    e.preventDefault();
+    $('#bubble-chooser').show();
+    $('#address-chooser').hide();
+    $('#category-details').hide();
+    $('.by-address').toggleClass('tab-active');
+    $('.by-category').toggleClass('tab-active');
+  });
+  $('.by-address').click(function(e) {
+    e.preventDefault();
+    $('#bubble-chooser').hide();
+    $('#address-chooser').show();
+    $('#category-details').hide();
+    $('.by-address').toggleClass('tab-active');
+    $('.by-category').toggleClass('tab-active');
+  });
 });
 
 var reordered = [];

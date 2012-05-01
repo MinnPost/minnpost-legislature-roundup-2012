@@ -2,16 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
 <head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>MinnPost</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<link type="text/css" rel="stylesheet" media="all" href="http://www.minnpost.com/sites/default/files/css/css_bb801627df93671ec2cf2a1c9ecf4ad2.css" />
-		<link type="text/css" rel="stylesheet" media="screen" href="http://www.minnpost.com/sites/default/files/css/css_b833827e9fdb99e83e393d38c32a71fd.css" />
-		<link type="text/css" rel="stylesheet" media="print" href="http://www.minnpost.com/sites/default/files/css/css_dd48b5b093a35515052acfc42613d628.css" />
-		<!--[if IE]>
-				<link rel="stylesheet" href="http://www.minnpost.com/sites/default/themes/derma/inc/css/ie.css?j" type="text/css">
-		<![endif]-->
-		<meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>MinnPost</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link type="text/css" rel="stylesheet" media="all" href="http://www.minnpost.com/sites/default/files/css/css_bb801627df93671ec2cf2a1c9ecf4ad2.css" />
+    <link type="text/css" rel="stylesheet" media="screen" href="http://www.minnpost.com/sites/default/files/css/css_b833827e9fdb99e83e393d38c32a71fd.css" />
+    <link type="text/css" rel="stylesheet" media="print" href="http://www.minnpost.com/sites/default/files/css/css_dd48b5b093a35515052acfc42613d628.css" />
+    <!--[if IE]>
+        <link rel="stylesheet" href="http://www.minnpost.com/sites/default/themes/derma/inc/css/ie.css?j" type="text/css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
 </head>
 <body class="front logged-in page-home one-sidebar sidebar-right admin-nw admin-vertical admin-df  one-sidebar sidebar-right">
 
@@ -19,8 +19,33 @@
 
 <!-- Embed Start -->
 <style type="text/css">
-#category-details {
+#category-details,
+#address-chooser {
   display: none;
+}
+
+/**
+ * Nav
+ */
+#application-nav ul,
+#application-nav ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#application-nav ul li {
+  display: inline;
+}
+#application-nav ul li a {
+  padding: .25em .5em;
+}
+#application-nav ul li a.tab-active {
+  border-top: 1px solid #999999;
+  border-right: 1px solid #999999;
+  border-left: 1px solid #999999;
+}
+#tab-container {
+  border: 1px solid #999999;
 }
 
 /**
@@ -42,13 +67,12 @@
   float: left;
 }
 
-
 /**
  * Bills
  */
 .bill-votes div {
-	font-size: 2em;
-	line-height: 1.5em;
+  font-size: 2em;
+  line-height: 1.5em;
 }
 .bill-id {
   margin-bottom: 1em;
@@ -58,22 +82,60 @@
   width: 50%;
   float: left;
 }
+
+/**
+ * Search
+ */
+#address-chooser-form {
+  width: 90%;
+  margin: 4em auto;
+  text-align: center;
+}
+#address-chooser-form p {
+  font-size: 1.5em;
+  line-height: 1.5em;
+}
+#address-chooser-form .address-radio {
+  margin-left: .25em;
+}
 </style>
 
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
-	
-	<div id="bubble-chooser" class="vis-section">
-		<div id="bubble-chart"></div>
-	</div>
-	
-	<div id="category-details">
-  	<div id="bill-category-container"></div>
-  	<div id="bills-list-container"></div>
-  	<div id="bill-detail-container"></div>
-	</div>
+  
+  <div id="application-nav">
+    <ul>
+      <li><a class="by-category tab-active" href="#by-category">By category</a></li>
+      <li><a class="by-address" href="#by-address">By address</a></li>
+    </ul>
+  </div>
+  
+  <div id="tab-container" class="clearfix">
+    <div id="bubble-chooser" class="vis-section">
+      <div id="bubble-chart"></div>
+    </div>
+    
+    <div id="address-chooser">
+      <form id="address-chooser-form">
+        <p>What bills did my 
+        <input type="radio" name="author_type" value="senator" checked="checked" class="address-radio" id="senator" />
+          <label for="senator">Senator</label>
+        <input type="radio" name="author_type" value="representative" class="address-radio" id="representative" /> 
+          <label for="representative">Representative</label> 
+        sponsor?</p>
+        <input type="text" id="address-chooser-address" class="form-text" />
+        <input type="submit" value="Find" id="address-chooser-submit" class="form-submit" />
+      </form>
+    </div>
+    
+    <div id="category-details">
+      <div id="bill-category-container"></div>
+      <div id="bills-list-container"></div>
+      <div id="bill-detail-container"></div>
+    </div>
+  </div>
 
 </div>
-	
+  
 <!-- Templates to be used in client side processing. -->
 
 <!-- Template for bill list -->
@@ -95,40 +157,40 @@
   
   <div class="bill-house">
     <h5>House</h5>
-  	<% if (typeof bill.get('house_ayes') != 'undefined') { %>
-    	<div class="bill-house-votes bill-votes">
-    	  <h6>House Votes</h6>
-    	  <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
-    	</div>
-  	<% } %>
-  	
-  	<div class="bill-house-sponsors">
-  	  <h6>House Sponsors</h6>
-  		<ul>
+    <% if (typeof bill.get('house_ayes') != 'undefined') { %>
+      <div class="bill-house-votes bill-votes">
+        <h6>House Votes</h6>
+        <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
+      </div>
+    <% } %>
+    
+    <div class="bill-house-sponsors">
+      <h6>House Sponsors</h6>
+      <ul>
         <% _.each( bill.get('house_sponsors'), function( s ) { %>
-  			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+          <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
         <% }); %>
-  		</ul>
-  	</div>
+      </ul>
+    </div>
   </div>
 
   <div class="bill-senate">
     <h5>Senate</h5>
-  	<% if (typeof bill.get('senate_ayes') != 'undefined') { %>
-  	  <div class="bill-senate-votes bill-votes">
-  	    <h6>Senate Votes</h6>
-  	    <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
-  	  </div>
-  	<% } %>
-  	
+    <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
+      <div class="bill-senate-votes bill-votes">
+        <h6>Senate Votes</h6>
+        <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
+      </div>
+    <% } %>
+    
     <div class="bill-senate-sponsors">
-  	  <h6>Senate Sponsors</h6>
-  		<ul>
+      <h6>Senate Sponsors</h6>
+      <ul>
         <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-  			  <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+          <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
         <% }); %>
-  		</ul>
-  	</div>
+      </ul>
+    </div>
   </div>
 </script>
 
