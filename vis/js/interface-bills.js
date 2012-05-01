@@ -112,6 +112,5 @@ var billList;
       // Handle list of bills
       billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
     });
-  
   });
 })(jQuery);

@@ -31,6 +31,12 @@ var categories = {
 
 $(document).ready(function() {
 	visCategories();
+	
+	$('.all-categories').live('click', function(e) {
+    e.preventDefault();
+    $('#bubble-chooser').slideDown('fast');
+    $('#category-details').slideUp('fast');
+  });
 });
 
 var reordered = [];
@@ -78,6 +84,8 @@ function visCategories(data) {
 				//TODO
 				if (typeof billList != 'undefined') {
 				  billList.filterCategory(this.data("name").replace('\n', ''));
+				  $('#bubble-chooser').slideUp('fast');
+				  $('#category-details').slideDown('fast');
 				}
 			});
 		var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy, category)

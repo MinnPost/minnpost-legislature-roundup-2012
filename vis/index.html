@@ -19,6 +19,10 @@
 
 <!-- Embed Start -->
 <style type="text/css">
+#category-details {
+  display: none;
+}
+
 /**
  * Layout
  */
@@ -57,10 +61,6 @@
 </style>
 
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
-
-	<div id="overview" class="vis-section">
-		<div id="overview-chart"></div>
-	</div>
 	
 	<div id="bubble-chooser" class="vis-section">
 		<div id="bubble-chart"></div>
@@ -134,6 +134,7 @@
 
 <!-- Template for category -->
 <script id="template-category" type="text/template">
+  <a class="all-categories" href="#all-categories">Back to all categories</a>
   <h3><%= category %></h3>
 </script>
 <!-- End templates -->
