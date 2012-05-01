@@ -59,8 +59,10 @@
         return this;
       },
       
-      showBill: function(bill) {
-        var billView = new BillView({ el: $('#bill-detail-container'), model: bill });
+      showBill: function(e) {
+        e.preventDefault();
+        var thisElem = $(e.currentTarget);
+        var billView = new BillView({ el: $('#bill-detail-container'), model: this.collection.getByCid(thisElem.attr('data-id')) });
         return this;
       }
     });

@@ -69,7 +69,7 @@
   <h4>Bills</h4>
   <ul>
     <% _.each( bills, function( b ) { %>
-      <li><a class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
+      <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
     <% }); %>
   </ul>
 </script>
