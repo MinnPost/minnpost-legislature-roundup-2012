@@ -91,7 +91,6 @@
     
     // Process bill data
     $.getJSON('data/bills.json', function(data) {
-      console.log(data);
       // Create bills collection
       var bills = new Bills();
       for (var i in data) {
