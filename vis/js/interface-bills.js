@@ -47,9 +47,10 @@
     
       initialize: function(d) {
         // Every function that uses 'this' as the current object should be in here
-        _.bindAll(this, 'render', 'showBill', 'filterCategory');
+        _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'filterCategory');
         
         this.collection = d.collection || new Bills();
+        this.billView = new BillView({ el: $('#bill-detail-container') });
       },
 
       render: function() {
@@ -63,8 +64,13 @@
       showBill: function(e) {
         e.preventDefault();
         var thisElem = $(e.currentTarget);
-        this.billView = this.billView || new BillView({ el: $('#bill-detail-container') });
         this.billView.model = this.collection.getByCid(thisElem.attr('data-id'));
+        this.billView.render();
+        return this;
+      },
+      
+      showFirstBill: function(e) {
+        this.billView.model = this.collection.at(0);
         this.billView.render();
         return this;
       },
@@ -78,6 +84,7 @@
       filterCategory: function(category) {
         this.collection.reset(this.collection.filterCategory(category));
         this.showCategory(category);
+        this.showFirstBill();
         this.render();
       }
     });
@@ -94,7 +101,6 @@
       
       // Handle list of bills
       var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
-      billList.render();
       billList.filterCategory('Judiciary');
     });
   
