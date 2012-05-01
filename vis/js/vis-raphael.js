@@ -76,7 +76,9 @@ function visCategories(data) {
 			})
 			.click(function() {
 				//TODO
-				console.log('TODO: List bills for %s', this.data("name"));
+				if (typeof billList != 'undefined') {
+				  billList.filterCategory(this.data("name").replace('\n', ''));
+				}
 			});
 		var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy, category)
 			.attr("font-size", 12)

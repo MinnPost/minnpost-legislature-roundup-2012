@@ -1,3 +1,5 @@
+// Todo: don't make global
+var billList;
 
 // Namespace and closure jQuery
 (function($) {
@@ -28,7 +30,6 @@
         _.bindAll(this, 'render');
         
         this.model = d.model || new Bill();
-        this.render();
       },
 
       render: function() {
@@ -40,7 +41,9 @@
     });
     
     // Bills list view
-    var BillsListView = Backbone.View.extend({  
+    var BillsListView = Backbone.View.extend({
+      categoryContainer: $('#bill-category-container'),
+      
       events: {
         'click .show-bill': 'showBill'
       },
@@ -50,6 +53,7 @@
         _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'filterCategory');
         
         this.collection = d.collection || new Bills();
+        this.fullCollection = new Bills(this.collection.models);
         this.billView = new BillView({ el: $('#bill-detail-container') });
       },
 
@@ -78,14 +82,21 @@
       showCategory: function(category) {
         // Render template
         var template = _.template($("#template-category").html(), { category: category });
-        $('#bill-category-container').html(template);
+        this.categoryContainer.html(template);
       },
       
       filterCategory: function(category) {
-        this.collection.reset(this.collection.filterCategory(category));
-        this.showCategory(category);
-        this.showFirstBill();
-        this.render();
+        var filtered = this.fullCollection.filterCategory(category);
+
+        if (_.isEmpty(filtered)) {
+          // TODO: show empty message
+        }
+        else {
+          this.collection.reset(filtered);
+          this.showCategory(category);
+          this.showFirstBill();
+          this.render();
+        }
       }
     });
     
@@ -99,8 +110,7 @@
       }
       
       // Handle list of bills
-      var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
-      billList.filterCategory('Judiciary');
+      billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
     });
   
   });
