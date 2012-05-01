@@ -6,6 +6,7 @@ sunlight.config.API_KEY = '1e1c9b31bf15440aacafe4125f221bf2'
 signedbills = [['HF 2173', 'SF 2067'], ['SF 2392', 'HF 2784'], ['SF 1750', 'HF 2214'], ['HF 2731', 'SF 2216'], ['SF1922', 'HF2169'], ['HF2949', 'SF2482'], ['HF2508', 'SF2319'], ['HF 2447', 'SF 2106'], ['SF 2296', 'HF 2545'],['SF 2112', 'HF 2437'], ['SF 2354', 'HF 2493'], ['SF 2316', 'HF 2495'], ['SF 2464', 'HF 2896'], ['HF 2276', 'SF 1811'], ['HF 2149', 'SF 1657'], ['HF 2861', 'SF 2466'], ['HF 2335', 'SF 1888'], ['HF 2614', 'SF 2227'], ['HF 0469', 'SF 0574'], ['HF 2246', 'SF 1825'], ['HF 1813', 'SF 1650'], ['HF 1175', 'SF 0929'], ['HF 0738', 'SF 1000'], ['SF 248', 'HF 0383'], ['SF 1675', 'HF 1967'], ['HF 1236', 'SF 0973'], ['SF 1678', 'HF 2059'], ['HF 2160', 'SF 2108'], ['HF 2373', 'SF 1874'], ['HF 2174', 'SF 1737'], ['SF 2379', 'HF 2680'], ['SF 1073', 'HF 1272'], ['HF 2506', 'SF 2059'], ['HF 1850', 'SF 2253'], ['HF 795', 'SF 0639'], ['SF 396', 'HF 0539'], ['SF 2271', 'HF 2494'], ['SF 2224', 'HF 2582'], ['SF 1123', 'HF 1245'], ['HF 2132', 'SF 2050'], ['SF 1416', 'HF 1595'], ['SF 0753', 'HF 1191'], ['SF 2181', 'HF 2650'], ['HF 2239', 'SF 2202'], ['HF 1816', 'SF 2125'], ['SF 1689', 'HF 1416'], ['SF 2360', 'HF 2587'], ['SF 1492', 'HF 2365'], ['SF 2060', 'HF 2770'], ['SF 1599', 'HF 2100'], ['SF 1875', 'HF 2307'], ['SF 1620', 'HF 1833'], ['HF 2128', 'SF 1876'], ['SF 2114', 'HF 2476'], ['SF 1964', 'HF 2263'], ['SF 1626', 'HF 2094'], ['SF 1553', 'HF 1972'], ['SF 1815', 'HF 1989'], ['SF 2184', 'HF 2763'], ['SF 1621', 'HF 2097'], ['SF 2131', 'HF 2378'], ['SF 1586', 'HF 1945'], ['HF 2187', 'SF 1791'], ['HF 2333', 'SF 1870'], ['SF 2394', 'HF 2775'], ['HF 1829', 'SF 1648'], ['HF 2216', 'SF 1910'], ['SF 1543', 'HF 2060'], ['SF 2173', 'HF 2626'], ['HF 1992', 'SF 1687'], ['SF 1809', 'HF 2237'], ['SF 2273', 'HF 2736'], ['SF 1934', 'HF 2342'], ['SF 1860', 'HF 2316'], ['SF 1793', 'HF 1998'], ['SF 1993', 'HF 2354'], ['SF 2069', 'HF 2544'], ['SF 2084', 'HF 2415'], ['SF 2297', 'HF 1899'], ['HF 2676', 'SF 2330'], ['HF 1384', 'SF 1084'], ['SF 1567', 'HF 2095'], ['HF 1903', 'SF 1814'], ['HF 2253', 'SF 1861'], ['HF 2793', 'SF 2426'], ['SF 1917', 'HF 2293'], ['HF 2291', 'SF 2346'], ['HF 2078', 'SF 1990'], ['HF 0382', 'SF 0352'], ['SF 1735', 'HF 2227'], ['SF 1542', 'HF 2441'], ['HF 1524', 'SF 1932'], ['HF 2376', 'SF 1971'], ['HF 0392', 'SF 0992'], ['HF 0300', 'SF 1160'], ['HF 1738', 'SF 1450'], ['HF 2152', 'SF 1739'], ['HF 1515', 'SF 1272'], ['SF 1183', 'HF 0032'], ['SF 1213', 'HF 1484'], ['SF 1240', 'HF 1535'], ['SF 1371', 'HF 1468'], ['HF 1585', 'SF 1322'], ['HF 1926', 'SF 1527'], ['HF 2394', 'SF 1994'], ['HF 1770', 'SF 1493']]
 vetoedbills = [['HF 1974', 'SF 2078'], ['SF 1921', 'HF 2340'], ['HF 1976', 'SF 1842'], ['HF 1812', 'SF 1846'], ['SF 0247', 'HF 0371'], ['SF 2183', 'HF 2596'], ['HF 1766', 'SF 1630'], ['SF 1236', 'HF 1418'], ['HF 2738', 'SF 1577'], ['SF 2014', 'HF 2404'], ['HF 2083', 'SF 2492'], ['HF 0545', 'SF 1600'], ['HF 1560', 'SF 0993'], ['SF 134', 'HF 0212'], ['HF 1467', 'SF 1357'], ['SF 530', 'HF 0770'], ['SF 0429', 'HF 0747'], ['SF 0373', 'HF 0654'], ['SF 0149', 'HF 0211']]
 
+
 all_bills = {}
 knownlegs = {}
 
@@ -21,10 +22,29 @@ def add_to_json(bills):
         	companiondata = {'votes': [],'sponsors':[]}
         
         title = data['title']
-        startdate = data['created_at'] 
-        enddate =  data['updated_at']
         categories = data['subjects']
         billurl = data['sources'][0]['url']
+        
+	bill_status = 'indeterminate' #default if for whatever reason we can't get the bill status
+	enddate =  data['updated_at'] #if we can't find the date of the last action, used openstates' last update
+	startdate = data['created_at'] #if we can't find an earlier date in actions, startdate
+	if startdate[8:10].isdigit():
+		startdate_day = int(startdate[8:10])
+	else:
+		startdate_day = -1
+	try:
+		for action in data['actions']:
+			if action['type'] == ['governor:vetoed']: #find if a governor:vetoed action exist
+				bill_status = 'vetoed'
+				enddate = action['date']
+			if action['type'] == ['governor:signed']: #find if a governor:signed action exists
+				bill_status = 'signed'
+				enddate = action['date']
+			if int(action['date'][8:10]) < startdate_day: #find the earliest action
+				startdate = action['date']
+	except:
+		bill_status = 'actions unavailable'
+
         
         #get the vote totals for the House. Sadly, openstates doesn't have data for MN Senate votes
         
@@ -87,6 +107,7 @@ def add_to_json(bills):
         #create a dictionary of the bill info and write it to the all_bills dict
         billinfo = {}
         billinfo['title'] = title
+        billinfo['bill_status'] = bill_status
         billinfo['start_date'] = startdate
         billinfo['end_date'] = enddate
         billinfo['house_ayes'] = votesfor_house
@@ -122,10 +143,6 @@ def get_leg_info(legids):
 				knownlegs[legislator] = ['data unavailable']
     return legs
 
-f = open('signedbills.json', 'a')
-f.write(add_to_json(signedbills) + "\n")
-f.close()
-
-f = open('vetoedbills.json', 'a')
-f.write(add_to_json(vetoedbills) + "\n")
+f = open('sbills.json', 'a')
+f.write(add_to_json(signedbills+vetoedbills) + "\n")
 f.close()
