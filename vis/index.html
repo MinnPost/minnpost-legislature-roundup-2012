@@ -514,8 +514,9 @@
       textObject.attr('text', tempText.substring(1));
     };
     
-    // Process bill data and handle application
-    $.getJSON('data/bills.json', function(data) {
+    // Process bill data and handle application.  JSONP callback
+    // $.getJSON('data/bills.json', function(data) {
+    bills = function(data) {
       // Get categories
       var i;
       var categories = {};
@@ -567,7 +568,14 @@
         $('.by-category').toggleClass('tab-active');
       });
 
+    };
+    $.ajax({
+      type: 'GET',
+      dataType: 'jsonp',
+      url: 'https://s3.amazonaws.com/data.minnpost/projects/mn-legislature-roundup-2012/bills.jsonp?callback=bills',
+      jsonp: 'callback'
     });
+    
   });
 })(jQuery);
 
