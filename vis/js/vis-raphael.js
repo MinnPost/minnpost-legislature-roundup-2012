@@ -41,16 +41,16 @@ $(document).ready(function() {
   // Tabs
   $('.by-category').click(function(e) {
     e.preventDefault();
-    $('#bubble-chooser').show();
-    $('#address-chooser').hide();
+    $('#bubble-chooser').fadeIn('fast');
+    $('#address-chooser').fadeOut('fast');
     $('#category-details').hide();
     $('.by-address').toggleClass('tab-active');
     $('.by-category').toggleClass('tab-active');
   });
   $('.by-address').click(function(e) {
     e.preventDefault();
-    $('#bubble-chooser').hide();
-    $('#address-chooser').show();
+    $('#bubble-chooser').fadeOut('fast');
+    $('#address-chooser').fadeIn('fast');
     $('#category-details').hide();
     $('.by-address').toggleClass('tab-active');
     $('.by-category').toggleClass('tab-active');
