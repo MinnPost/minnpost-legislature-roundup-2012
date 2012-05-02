@@ -238,10 +238,15 @@
       
       filterCategory: function (category) {
         return this.filter(function (bill) {
-          var found = _.filter(bill.get('categories'), function(c) {
-            return c == category;
-          });
-          return !_.isEmpty(found);
+          if (_.isArray(bill.get('categories'))) {
+            var found = _.filter(bill.get('categories'), function(c) {
+              return c == category;
+            });
+            return !_.isEmpty(found);
+          }
+          else {
+            return false;
+          }
         });
       }
     });
@@ -349,7 +354,7 @@
       // Create bubbles
       for (var category in categories) {
         // Make radius proportional given max bills in a category
-        var radius = (((maxBills - categories[category].length) / maxBills) * (bubbleMaxRadius - bubbleMinRadius)) + bubbleMinRadius;
+        var radius = ((categories[category].length / maxBills) * (bubbleMaxRadius - bubbleMinRadius)) + bubbleMinRadius;
         
         // Update x and y positions
         xPos += 150;
@@ -374,6 +379,7 @@
             this.attr("opacity", "0.7");
           })
           .click(function() {
+            // Handle filtering of Bills list and display
             if (typeof billList != 'undefined') {
               billList.filterCategory(this.data("name").replace('\n', ''));
               $('#bubble-chooser').slideUp('fast');
