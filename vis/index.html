@@ -85,8 +85,9 @@
  * Bills
  */
 .bill-votes div {
-  font-size: 2em;
+  font-size: 2.5em;
   line-height: 1.5em;
+  margin-bottom: .5em;
 }
 .bill-id {
   margin-bottom: 1em;
@@ -135,6 +136,28 @@
 #bill-detail-container {
   background-color: #CDCDD0;
 }
+#bill-detail-container .bill-status {
+  float: right;
+  text-transform: uppercase;
+  margin: 0 0 .5em .5em; 
+  font-size: 1.5em;
+  padding: .5em 1.5em;
+  background-color: #EBEBEB;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+#bill-detail-container h4 {
+  margin-bottom: .75em;
+}
+#bill-detail-container h5 {
+  border-bottom: 3px solid #EBEBEB;
+  margin-bottom: 1em;
+}
+#bill-detail-container .bill-house h5 {
+  margin-right: 1em;
+}
+
 
 /**
  * Search
@@ -204,27 +227,28 @@
 <!-- Template for bill details -->
 <script id="template-bill" type="text/template">
   <div class="bill-details-wrapper">
-    <h4 class="bill-title"><%= bill.get('title') %></h4>
-    <div class="bill-id"><a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %></a></div>
+    <div class="bill-status"><%= bill.get('bill_status') %></div>
+    <h4 class="bill-title"><%= bill.get('bill') %></h4>
     <div class="bill-timeline"></div>
-    <div class="bill-description"></div>
+    <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">See the full text.</a></p>
     
     <div class="bill-house">
       <h5>House</h5>
       <% if (typeof bill.get('house_ayes') != 'undefined') { %>
         <div class="bill-house-votes bill-votes">
-          <h6>House Votes</h6>
           <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
         </div>
       <% } %>
       
       <div class="bill-house-sponsors">
-        <h6>House Sponsors</h6>
-        <ul>
-          <% _.each( bill.get('house_sponsors'), function( s ) { %>
-            <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-          <% }); %>
-        </ul>
+        <% if (!_.isEmpty(bill.get('house_sponsors'))) { %>
+          <h6>House Sponsors</h6>
+          <ul>
+            <% _.each( bill.get('house_sponsors'), function( s ) { %>
+              <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+            <% }); %>
+          </ul>
+        <% } %>
       </div>
     </div>
   
@@ -232,18 +256,19 @@
       <h5>Senate</h5>
       <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
         <div class="bill-senate-votes bill-votes">
-          <h6>Senate Votes</h6>
           <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
         </div>
       <% } %>
       
       <div class="bill-senate-sponsors">
-        <h6>Senate Sponsors</h6>
-        <ul>
-          <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-            <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-          <% }); %>
-        </ul>
+        <% if (!_.isEmpty(bill.get('senate_sponsors'))) { %>
+          <h6>Senate Sponsors</h6>
+          <ul>
+            <% _.each( bill.get('senate_sponsors'), function( s ) { %>
+              <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+            <% }); %>
+          </ul>
+        <% } %>
       </div>
     </div>
     <br class="clear" />
@@ -503,7 +528,7 @@
           }
         }
       }
-      
+
       // Create bills collection
       var bills = new Bills();
       for (var i in data) {
