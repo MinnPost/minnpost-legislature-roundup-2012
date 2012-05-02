@@ -114,7 +114,7 @@
   padding: .1em 1em;
 }
 #bills-list-container ul li a.active {
-  background-color: #CCCCCC;
+  background-color: #CDCDD0;
   color: #222222;
 }
 
@@ -133,7 +133,7 @@
   background-color: #FFFFFF;
 }
 #bill-detail-container {
-  background-color: #CCCCCC;
+  background-color: #CDCDD0;
 }
 
 /**
@@ -306,6 +306,14 @@
         // Render template
         var template = _.template($("#template-bill").html(), { bill: this.model });
         $(this.el).html(template);
+        
+        // Figure out heights
+        var billH = $('.bill-details-wrapper').height();
+        var listH = $('#bills-list-container').height();
+        if (listH > billH) {
+          $('.bill-details-wrapper').height(listH);
+        }
+        
         return this;
       }
     });
@@ -346,7 +354,7 @@
       
       showFirstBill: function() {
         this.billView.model = this.collection.at(0);
-        this.activateBill($('.show-bill[data-id=' + this.billView.model.cid + ']'));
+        this.activateBill($('[data-id="' + this.billView.model.cid + '"]'));
         this.billView.render();
         return this;
       },
@@ -372,8 +380,8 @@
         else {
           this.collection.reset(filtered);
           this.showCategory(category);
-          this.showFirstBill();
           this.render();
+          this.showFirstBill();
         }
       }
     });
