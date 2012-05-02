@@ -24,6 +24,10 @@
   display: none;
 }
 
+.clear {
+  clear: both;
+}
+
 /**
  * Nav
  */
@@ -35,17 +39,26 @@
 }
 #application-nav ul li {
   display: inline;
+  margin: 0 0.5em 0 0;
 }
 #application-nav ul li a {
-  padding: .25em .5em;
+  margin: 0;
+  padding: 5px 1em 3px 1em;
+}
+#application-nav ul {
+  border-bottom: 1px solid #999999;
+
 }
 #application-nav ul li a.tab-active {
   border-top: 1px solid #999999;
-  border-right: 1px solid #999999;
   border-left: 1px solid #999999;
+  border-right: 1px solid #999999;
+  background-color: #FFFFFF;
 }
 #tab-container {
-  border: 1px solid #999999;
+  border-bottom: 1px solid #999999;
+  border-right: 1px solid #999999;
+  border-left: 1px solid #999999;
 }
 
 /**
@@ -87,9 +100,8 @@
  * Search
  */
 #address-chooser-form {
-  width: 90%;
-  margin: 4em auto;
   text-align: center;
+  padding: 4em 2em;
 }
 #address-chooser-form p {
   font-size: 1.5em;
@@ -131,6 +143,7 @@
       <div id="bill-category-container"></div>
       <div id="bills-list-container"></div>
       <div id="bill-detail-container"></div>
+      <br class="clear" />
     </div>
   </div>
 
