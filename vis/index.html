@@ -238,10 +238,15 @@
       
       filterCategory: function (category) {
         return this.filter(function (bill) {
-          var found = _.filter(bill.get('categories'), function(c) {
-            return c == category;
-          });
-          return !_.isEmpty(found);
+          if (_.isArray(bill.get('categories'))) {
+            var found = _.filter(bill.get('categories'), function(c) {
+              return c == category;
+            });
+            return !_.isEmpty(found);
+          }
+          else {
+            return false;
+          }
         });
       }
     });
@@ -323,23 +328,33 @@
       }
     });
     
-    // Bulbble visualization
+    // Bubble visualization
     var reordered = [];
     var height = 650;
     var width = 975;
-    var bubbleConstant = 6;
+    var bubbleMinRadius = 6;
+    var bubbleMaxRadius = 60;
     var xBubbleSpacing = 50;
     var yBubbleSpacing = 160;
   
+    // Visualize categories with a bubble layout.
     function visCategories(categories, billList) {
       var bubbleChart = Raphael(document.getElementById("bubble-chart"), width, height);
     
-      //var xPos = 0;
+      // Default positions
       var xPos = -50;
       var yPos = 125;
+      
+      // Find the max number in a category
+      var maxBills = 1;
+      for (var c in categories) {
+        maxBills = (categories[c].length > maxBills) ? categories[c].length : maxBills;
+      }
     
+      // Create bubbles
       for (var category in categories) {
-        var radius = (categories[category].length) * bubbleConstant;
+        // Make radius proportional given max bills in a category
+        var radius = ((categories[category].length / maxBills) * (bubbleMaxRadius - bubbleMinRadius)) + bubbleMinRadius;
         
         // Update x and y positions
         xPos += 150;
@@ -364,18 +379,20 @@
             this.attr("opacity", "0.7");
           })
           .click(function() {
-            //TODO
+            // Handle filtering of Bills list and display
             if (typeof billList != 'undefined') {
               billList.filterCategory(this.data("name").replace('\n', ''));
               $('#bubble-chooser').slideUp('fast');
               $('#category-details').slideDown('fast');
             }
           });
-        var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy, category)
+        var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy)
           .attr("font-size", 12)
           .attr("fill", "#444")
           .data("spreadX", xPos)
           .data("spreadY", yPos + 20);
+        text = wrapText(category, text);
+        
         var enlarge = Raphael.animation({"r": radius}, 1000, "easeIn");
         circle.animate(enlarge.delay(Math.random() * 1000));
     
@@ -383,6 +400,7 @@
       spreadVis(bubbleChart);
     };
   
+    // Move the bubbles around.
     function spreadVis(paper) {
       paper.forEach(function(el) {
         if (el.type === "circle") {
@@ -395,6 +413,24 @@
       });
     };
     
+    // Wrapping text function
+    function wrapText(text, textObject) {
+      var maxWidth = 140;
+      var words = text.split(' ');
+      var tempText = '';
+      
+      for (var i = 0; i < words.length; i++) {
+        textObject.attr('text', tempText + " " + words[i]);
+        if (textObject.getBBox().width > maxWidth) {
+          tempText += '\n' + words[i];
+        }
+        else {
+          tempText += ' ' + words[i];
+        }
+      }
+      textObject.attr('text', tempText.substring(1));
+    };
+    
     // Process bill data and handle application
     $.getJSON('data/bills.json', function(data) {
       // Get categories
@@ -402,9 +438,11 @@
       var categories = {};
       for (i in data) {
         var c;
-        for (c in data[i].categories) {
-          categories[data[i].categories[c]] = categories[data[i].categories[c]] || [];
-          categories[data[i].categories[c]].push(i);
+        if (_.isArray(data[i].categories)) {
+          for (c in data[i].categories) {
+            categories[data[i].categories[c]] = categories[data[i].categories[c]] || [];
+            categories[data[i].categories[c]].push(i);
+          }
         }
       }
       
