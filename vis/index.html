@@ -323,23 +323,33 @@
       }
     });
     
-    // Bulbble visualization
+    // Bubble visualization
     var reordered = [];
     var height = 650;
     var width = 975;
-    var bubbleConstant = 6;
+    var bubbleMinRadius = 6;
+    var bubbleMaxRadius = 60;
     var xBubbleSpacing = 50;
     var yBubbleSpacing = 160;
   
+    // Visualize categories with a bubble layout.
     function visCategories(categories, billList) {
       var bubbleChart = Raphael(document.getElementById("bubble-chart"), width, height);
     
-      //var xPos = 0;
+      // Default positions
       var xPos = -50;
       var yPos = 125;
+      
+      // Find the max number in a category
+      var maxBills = 1;
+      for (var c in categories) {
+        maxBills = (categories[c].length > maxBills) ? categories[c].length : maxBills;
+      }
     
+      // Create bubbles
       for (var category in categories) {
-        var radius = (categories[category].length) * bubbleConstant;
+        // Make radius proportional given max bills in a category
+        var radius = (((maxBills - categories[category].length) / maxBills) * (bubbleMaxRadius - bubbleMinRadius)) + bubbleMinRadius;
         
         // Update x and y positions
         xPos += 150;
