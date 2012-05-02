@@ -402,11 +402,15 @@
       var categories = {};
       for (i in data) {
         var c;
-        for (c in data[i].categories) {
-          categories[data[i].categories[c]] = categories[data[i].categories[c]] || [];
-          categories[data[i].categories[c]].push(i);
+        if (_.isArray(data[i].categories)) {
+          for (c in data[i].categories) {
+            categories[data[i].categories[c]] = categories[data[i].categories[c]] || [];
+            categories[data[i].categories[c]].push(i);
+          }
         }
       }
+      
+      console.log(categories);
       
       // Create bills collection
       var bills = new Bills();
