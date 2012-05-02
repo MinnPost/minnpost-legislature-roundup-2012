@@ -96,6 +96,45 @@
   width: 50%;
   float: left;
 }
+#bills-list-container {
+  padding-bottom: 1em;
+}
+#bills-list-container h4 {
+  padding-left: 1em;
+  padding-bottom: .5em;
+}
+#bills-list-container ul,
+#bills-list-container ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#bills-list-container ul li a {
+  display: block;
+  padding: .1em 1em;
+}
+#bills-list-container ul li a.active {
+  background-color: #CCCCCC;
+  color: #222222;
+}
+
+#bill-category-container a {
+  float: right;
+  font-size: .85em;
+  margin: .5em .5em 0 0;
+}
+#bill-category-container h3 {
+  text-align: center;
+  padding: 1em;
+}
+.bill-details-wrapper {
+  margin: 1em;
+  padding: 1em;
+  background-color: #FFFFFF;
+}
+#bill-detail-container {
+  background-color: #CCCCCC;
+}
 
 /**
  * Search
@@ -164,47 +203,50 @@
 
 <!-- Template for bill details -->
 <script id="template-bill" type="text/template">
-  <h4 class="bill-title"><%= bill.get('title') %></h4>
-  <div class="bill-id"><a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %></a></div>
-  <div class="bill-timeline"></div>
-  <div class="bill-description"></div>
+  <div class="bill-details-wrapper">
+    <h4 class="bill-title"><%= bill.get('title') %></h4>
+    <div class="bill-id"><a href="<%= bill.get('billurl') %>"><%= bill.get('bill') %></a></div>
+    <div class="bill-timeline"></div>
+    <div class="bill-description"></div>
+    
+    <div class="bill-house">
+      <h5>House</h5>
+      <% if (typeof bill.get('house_ayes') != 'undefined') { %>
+        <div class="bill-house-votes bill-votes">
+          <h6>House Votes</h6>
+          <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
+        </div>
+      <% } %>
+      
+      <div class="bill-house-sponsors">
+        <h6>House Sponsors</h6>
+        <ul>
+          <% _.each( bill.get('house_sponsors'), function( s ) { %>
+            <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+          <% }); %>
+        </ul>
+      </div>
+    </div>
   
-  <div class="bill-house">
-    <h5>House</h5>
-    <% if (typeof bill.get('house_ayes') != 'undefined') { %>
-      <div class="bill-house-votes bill-votes">
-        <h6>House Votes</h6>
-        <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
+    <div class="bill-senate">
+      <h5>Senate</h5>
+      <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
+        <div class="bill-senate-votes bill-votes">
+          <h6>Senate Votes</h6>
+          <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
+        </div>
+      <% } %>
+      
+      <div class="bill-senate-sponsors">
+        <h6>Senate Sponsors</h6>
+        <ul>
+          <% _.each( bill.get('senate_sponsors'), function( s ) { %>
+            <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+          <% }); %>
+        </ul>
       </div>
-    <% } %>
-    
-    <div class="bill-house-sponsors">
-      <h6>House Sponsors</h6>
-      <ul>
-        <% _.each( bill.get('house_sponsors'), function( s ) { %>
-          <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-        <% }); %>
-      </ul>
     </div>
-  </div>
-
-  <div class="bill-senate">
-    <h5>Senate</h5>
-    <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
-      <div class="bill-senate-votes bill-votes">
-        <h6>Senate Votes</h6>
-        <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
-      </div>
-    <% } %>
-    
-    <div class="bill-senate-sponsors">
-      <h6>Senate Sponsors</h6>
-      <ul>
-        <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-          <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
-        <% }); %>
-      </ul>
-    </div>
+    <br class="clear" />
   </div>
 </script>
 
@@ -278,7 +320,7 @@
     
       initialize: function(d) {
         // Every function that uses 'this' as the current object should be in here
-        _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'filterCategory');
+        _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'activateBill', 'filterCategory');
         
         this.collection = d.collection || new Bills();
         this.fullCollection = new Bills(this.collection.models);
@@ -297,13 +339,21 @@
         e.preventDefault();
         var thisElem = $(e.currentTarget);
         this.billView.model = this.collection.getByCid(thisElem.attr('data-id'));
+        this.activateBill(thisElem);
         this.billView.render();
         return this;
       },
       
-      showFirstBill: function(e) {
+      showFirstBill: function() {
         this.billView.model = this.collection.at(0);
+        this.activateBill($('.show-bill[data-id=' + this.billView.model.cid + ']'));
         this.billView.render();
+        return this;
+      },
+      
+      activateBill: function(element) {
+        $('.show-bill').removeClass('active');
+        element.addClass('active');
         return this;
       },
       
