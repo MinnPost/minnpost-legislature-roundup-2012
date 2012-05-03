@@ -308,7 +308,11 @@
           <h6>House Sponsors</h6>
           <ul>
             <% _.each( bill.get('house_sponsors'), function( s ) { %>
-              <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+              <% if (s[3]) { %>
+                <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+              <% } else { %>
+                <li><%= s[0] %></li>
+              <% } %>
             <% }); %>
           </ul>
         <% } %>
@@ -328,7 +332,11 @@
           <h6>Senate Sponsors</h6>
           <ul>
             <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-              <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+              <% if (s[3]) { %>
+                <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+              <% } else { %>
+                <li><%= s[0] %></li>
+              <% } %>
             <% }); %>
           </ul>
         <% } %>
