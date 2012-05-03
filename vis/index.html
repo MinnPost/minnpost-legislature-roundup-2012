@@ -28,6 +28,14 @@
 .clear {
   clear: both;
 }
+      
+.footnote {
+  font-size: .75em;
+  font-style: italic;
+  color: #414141;
+  margin-top: 1em;
+  clear: both;
+}
 
 /**
  * Nav
@@ -252,6 +260,8 @@
       <br class="clear" />
     </div>
   </div>
+  
+  <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.</p>
 
 </div>
   
@@ -418,11 +428,14 @@
       
       filterAuthor: function(author, type) {
         var sponsorlist = (type == 'representative') ? 'house_sponsors' : 'senate_sponsors';
-        
+        if (!_.isArray(author)) {
+          author = [author];
+        }
+
         return this.filter(function (bill) {
           if (_.isArray(bill.get(sponsorlist))) {
             var found = _.filter(bill.get(sponsorlist), function(s) {
-              return s[0] == author;
+              return (_.indexOf(author, s[0]) === -1) ? false : true;
             });
             return !_.isEmpty(found);
           }
@@ -508,7 +521,6 @@
       },
       
       showCategory: function(category, image) {
-        console.log(image);
         // Render template
         var template = _.template($("#template-category").html(), {
           category: category, 
@@ -556,20 +568,21 @@
             var request = 'http://openstates.org/api/v1/legislators/geo/?long=' + encodeURI(value.lon) + '&lat=' + encodeURI(value.lat) + '&apikey=' + encodeURI(APIKEY) + '&callback=?';
             $.getJSON(request, function(data) {
               var d;
-              var name;
+              var names = [];
               var chamber = (type == 'representative') ? 'lower' : 'upper';
+              
+              // Find relevant names
               for (d in data) {
                 if (data[d].active && data[d].level == 'state' && data[d].chamber == chamber) {
-                  name = data[d].first_name + ' ' + data[d].last_name;
-                  name = data[d].full_name;
+                  names.push(data[d].full_name);
                 }
               }
 
               // Filter by representative
-              if (name && type) {
-                var filtered = thisList.filterAuthor(name, type);
+              if (!_.isEmpty(names)) {
+                var filtered = thisList.filterAuthor(names, type);
                 if (_.isEmpty(filtered)) {
-                  thisList.showError('No bills found sponsored by your representatives.');
+                  thisList.showError('No bills found sponsored by your representatives, <em>' + names.join(', ') + '</em>.');
                 }
                 else {
                   $('#address-chooser').slideUp('fast');
