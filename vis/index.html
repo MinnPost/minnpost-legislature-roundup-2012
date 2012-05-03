@@ -529,7 +529,7 @@
         e.preventDefault();
         var thisList = this;
         var thisElem = $(e.currentTarget);
-        var type = $('input[name="author_type"]').val();
+        var type = $('input:radio[name="author_type"]:checked').val();
         var address = $('input#address-chooser-address').val();
         var mnBounds = [43.499356, -97.239209, 49.384358, -89.489226];
         
@@ -551,12 +551,35 @@
             thisList.showError('Sorry, but what you are looking for is outside of Minnesota.');
           }
           else {
-            // Send to service
-            
-            // Filter by representative
-            thisList.filterAuthor('Warren Limmer', type);
-            $('#address-chooser').slideUp('fast');
-            $('#category-details').slideDown('fast');
+            // Send to Open States service
+            var APIKEY = '49c5c72c157d4b37892ddb52c63d06be';
+            var request = 'http://openstates.org/api/v1/legislators/geo/?long=' + encodeURI(value.lon) + '&lat=' + encodeURI(value.lat) + '&apikey=' + encodeURI(APIKEY) + '&callback=?';
+            $.getJSON(request, function(data) {
+              var d;
+              var name;
+              var chamber = (type == 'representative') ? 'lower' : 'upper';
+              for (d in data) {
+                if (data[d].active && data[d].level == 'state' && data[d].chamber == chamber) {
+                  name = data[d].first_name + ' ' + data[d].last_name;
+                  name = data[d].full_name;
+                }
+              }
+
+              // Filter by representative
+              if (name && type) {
+                var filtered = thisList.filterAuthor(name, type);
+                if (_.isEmpty(filtered)) {
+                  thisList.showError('No bills found sponsored by your representatives.');
+                }
+                else {
+                  $('#address-chooser').slideUp('fast');
+                  $('#category-details').slideDown('fast');
+                }
+              }
+              else {
+                thisList.showError('We could not find a representative for that address.');
+              }
+            });
           }
         });
       },
@@ -573,6 +596,8 @@
           this.render();
           this.showFirstBill();
         }
+        
+        return filtered;
       },
       
       filterCategory: function(category) {
