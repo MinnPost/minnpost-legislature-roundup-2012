@@ -28,8 +28,9 @@ def add_to_json(bills):
 	bill_status = 'indeterminate' #default if for whatever reason we can't get the bill status
 	enddate =  data['updated_at'] #if we can't find the date of the last action, used openstates' last update
 	startdate = data['created_at'] #if we can't find an earlier date in actions, startdate
-	if startdate[8:10].isdigit():
+	if startdate[8:10].isdigit() and startdate[5:7].isdigit():
 		startdate_day = int(startdate[8:10])
+		startdate_month = int(startdate[5:7])
 	else:
 		startdate_day = -1
 	try:
@@ -40,8 +41,15 @@ def add_to_json(bills):
 			if action['type'] == ['governor:signed']: #find if a governor:signed action exists
 				bill_status = 'signed'
 				enddate = action['date']
-			if int(action['date'][8:10]) < startdate_day: #find the earliest action
-				startdate = action['date']
+			if int(action['date'][5:7]) < startdate_month: #if an action has a lower month
+				startdate = action['date'] #update startdate
+				startdate_day = int(startdate[8:10]) #update startdate_day and _month for further testing
+				startdate_month = int(startdate[5:7])
+			else:
+				if int(action['date'][5:7]) == startdate_month and int(action['date'][8:10]) < startdate_day: #if the month is the same, but the day of the current action is lower, that is the earliest action
+					startdate = action['date'] #update startdate
+					startdate_day = int(startdate[8:10]) #update startdate_day for further tests
+					startdate_month = int(startdate[5:7]) #update startdate_month for further tests
 	except:
 		bill_status = 'actions unavailable'
 
