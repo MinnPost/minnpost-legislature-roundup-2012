@@ -261,7 +261,7 @@
     </div>
   </div>
   
-  <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.</p>
+  <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.  Note that some legislators are not properly linked to bills they sponsor and will affect the accuracy of the address search.</p>
 
 </div>
   
@@ -590,7 +590,7 @@
               if (!_.isEmpty(names)) {
                 var filtered = thisList.filterAuthor(names, type);
                 if (_.isEmpty(filtered)) {
-                  thisList.showError('No bills found sponsored by your representatives, <em>' + names.join(', ') + '</em>.');
+                  thisList.showError('No bills found sponsored by your legislator(s), <em>' + names.join(', ') + '</em>.  This could be an issue with the data quality and may not accurately reflect the activities of these legislator(s).');
                 }
                 else {
                   $('#address-chooser').slideUp('fast');
