@@ -624,22 +624,27 @@
       // Tabs
       $('.by-category').click(function(e) {
         e.preventDefault();
+        if (!$('.by-category').hasClass('tab-active')) {
+          $('#address-chooser').fadeOut('fast');
+          $('.by-address').toggleClass('tab-active');
+          $('.by-category').toggleClass('tab-active');
+        }
         $('#bubble-chooser').fadeIn('fast');
-        $('#address-chooser').fadeOut('fast');
         $('#category-details').hide();
-        $('.by-address').toggleClass('tab-active');
-        $('.by-category').toggleClass('tab-active');
       });
       $('.by-address').click(function(e) {
         e.preventDefault();
-        $('#bubble-chooser').fadeOut('fast');
+        if (!$('.by-address').hasClass('tab-active')) {
+          $('#bubble-chooser').fadeOut('fast');
+          $('.by-address').toggleClass('tab-active');
+          $('.by-category').toggleClass('tab-active');
+        }
         $('#address-chooser').fadeIn('fast');
         $('#category-details').hide();
-        $('.by-address').toggleClass('tab-active');
-        $('.by-category').toggleClass('tab-active');
       });
-
     };
+    
+    // Get data
     $.ajax({
       type: 'GET',
       dataType: 'jsonp',
