@@ -20,7 +20,8 @@
 <!-- Embed Start -->
 <style type="text/css">
 #category-details,
-#address-chooser {
+#address-chooser,
+#application-nav {
   display: none;
 }
 
@@ -31,9 +32,6 @@
 /**
  * Nav
  */
-#application-nav {
-  display: none;
-}
 #application-nav ul,
 #application-nav ul li {
   list-style: none;
@@ -80,8 +78,9 @@
   float: left;
 }
 #bill-detail-container {
-  width: 80%;
+  width: 78%;
   float: left;
+  margin: 0 2% 2% 0;
 }
 
 /**
@@ -125,7 +124,7 @@
 #bill-category-container a {
   float: right;
   font-size: .85em;
-  margin: .5em .5em 0 0;
+  margin: .5em 2.5% 0 0;
 }
 #bill-category-container h3 {
   text-align: center;
@@ -178,8 +177,7 @@
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
 }
-
-.category-image {
+#bill-category-container .category-image {
   width: 30px;
   max-width: 40px;
   max-height: 70px;
@@ -332,7 +330,7 @@
 
 <!-- Template for category -->
 <script id="template-category" type="text/template">
-  <a class="all-categories" href="#all-categories">Back to all categories</a>
+  <a class="all-categories" href="#all-categories">&lt;-- back</a>
   <h3><% if (typeof image_url != 'undefined') { %><img class="category-image" src="<%= image_url %>" /> <% } %> <%= category %></h3>
 </script>
 <!-- End templates -->
@@ -734,7 +732,12 @@
       // Navigation and interface
       $('.all-categories').live('click', function(e) {
         e.preventDefault();
-        $('#bubble-chooser').slideDown('fast');
+        if ($('.by-category').hasClass('tab-active')) {
+          $('#bubble-chooser').slideDown('fast');
+        }
+        else {
+          $('#address-chooser').slideDown('fast');
+        }
         $('#category-details').slideUp('fast');
       });
       
