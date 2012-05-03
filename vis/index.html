@@ -179,6 +179,16 @@
   -moz-border-radius: 3px;
 }
 
+.category-image {
+  width: 30px;
+  max-width: 40px;
+  max-height: 70px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  margin-bottom: -5px;
+}
+
 
 /**
  * Search
@@ -290,7 +300,7 @@
           <h6>House Sponsors</h6>
           <ul>
             <% _.each( bill.get('house_sponsors'), function( s ) { %>
-              <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+              <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
             <% }); %>
           </ul>
         <% } %>
@@ -310,7 +320,7 @@
           <h6>Senate Sponsors</h6>
           <ul>
             <% _.each( bill.get('senate_sponsors'), function( s ) { %>
-              <li><a href="<%= s[3] %>"><%= s[0] %></a></li>
+              <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
             <% }); %>
           </ul>
         <% } %>
@@ -323,7 +333,7 @@
 <!-- Template for category -->
 <script id="template-category" type="text/template">
   <a class="all-categories" href="#all-categories">Back to all categories</a>
-  <h3><%= category %></h3>
+  <h3><% if (typeof image_url != 'undefined') { %><img class="category-image" src="<%= image_url %>" /> <% } %> <%= category %></h3>
 </script>
 <!-- End templates -->
 
@@ -374,6 +384,19 @@
         // Add one to ensure it is a non-zero result.  If start time is
         // before the session start time, just assume 0.
         return (start.getTime() < sessionBegin.getTime()) ? 0 : startInterval / sessionLength;
+      },
+      
+      getImageURL: function(author, type) {
+        var sponsorlist = (type == 'representative') ? 'house_sponsors' : 'senate_sponsors';
+        var sponsors = this.get(sponsorlist);
+
+        if (_.isArray(sponsors)) {
+          for (var s in sponsors) {
+            if (sponsors[s][0] == author) {
+              return sponsors[s][2];
+            }
+          }
+        }
       }
     });
     
@@ -486,14 +509,11 @@
         return this;
       },
       
-      showCategory: function(category, type, author) {
-        // Get icon or image
-        var image;
-        
+      showCategory: function(category, image) {
+        console.log(image);
         // Render template
         var template = _.template($("#template-category").html(), {
           category: category, 
-          type: type,
           image_url: image
         });
         this.categoryContainer.html(template);
@@ -551,7 +571,7 @@
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory(author, 'author');
+          this.showCategory(author, this.collection.at(0).getImageURL(author, type));
           this.render();
           this.showFirstBill();
         }
@@ -565,7 +585,7 @@
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory(category, 'category');
+          this.showCategory(category);
           this.render();
           this.showFirstBill();
         }
