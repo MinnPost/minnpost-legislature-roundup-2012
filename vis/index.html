@@ -31,6 +31,9 @@
 /**
  * Nav
  */
+#application-nav {
+  display: none;
+}
 #application-nav ul,
 #application-nav ul li {
   list-style: none;
@@ -157,6 +160,24 @@
 #bill-detail-container .bill-house h5 {
   margin-right: 1em;
 }
+#bill-detail-container .bill-timeline-container {
+  width: 400px;
+  height: 1.5em;
+  background-color: #EBEBEB;
+  margin-bottom: 1.5em;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+#bill-detail-container .bill-timeline-interval {
+  width: 50px;
+  height: 1.5em;
+  background-color: #10517F;
+  margin-left: 20px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
 
 
 /**
@@ -229,8 +250,18 @@
   <div class="bill-details-wrapper">
     <div class="bill-status"><%= bill.get('bill_status') %></div>
     <h4 class="bill-title"><%= bill.get('bill') %></h4>
-    <div class="bill-timeline"></div>
     <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">See the full text.</a></p>
+    
+    
+    <% if (typeof bill.get('start_date') != 'undefined') { %>
+      <div class="bill-timeline">
+        <h5>Time: <%= bill.getDays() %> days</h5>
+        <div class="bill-timeline-container">
+          <div style="width: <%= bill.getIntervalPercentage() * 400 %>px; margin-left: <%= bill.getStartPercentage() * 400 %>px;" class="bill-timeline-interval">
+        </div>
+      </div>
+    <% } %>
+    
     
     <div class="bill-house">
       <h5>House</h5>
@@ -283,8 +314,8 @@
 <!-- End templates -->
 
 
-<!-- Check for jQuery as it is included in MinnPost site. -->
-<script type="text/javascript">window.jQuery || document.write('<script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/bubbletree-master-20120410/lib/jquery-1.5.2.min.js"><\/script>')</script>
+<!-- Backbone (sort of) requires jQuery 1.4.3+ -->
+<script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/bubbletree-master-20120410/lib/jquery-1.5.2.min.js"></script>
 
 <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/raphael-2.1.0/raphael-min.js"></script>
 <script type="text/javascript" src="https://s3.amazonaws.com/data.minnpost/js/underscore-1.3.3/underscore-min.js"></script>
@@ -296,8 +327,41 @@
   $(document).ready(function() {
   
     // Create basic models for bills and categories
-    var Category = Backbone.Model.extend();
-    var Bill = Backbone.Model.extend();
+    var Bill = Backbone.Model.extend({
+      getDays: function() {
+        var start = new Date(this.get('start_date'));
+        var end = new Date(this.get('end_date'));
+        var days = 12 * 60 * 60 * 1000;
+        
+        // Add one to ensure it is a non-zero result.
+        return Math.ceil(((end.getTime() + 1) - start.getTime()) / days);
+      },
+      
+      getIntervalPercentage: function() {
+        var days = 12 * 60 * 60 * 1000;
+        var sessionBegin = new Date('2012-01-24');
+        var sessionEnd = new Date('2012-05-24');
+        var sessionLength = Math.ceil(((sessionEnd.getTime() + 1) - sessionBegin.getTime()) / days);
+        var theseDays = (this.getDays() < 3) ? 3 : this.getDays();
+        
+        // Get percentage of length but don't go over 1.
+        return (theseDays > sessionLength) ? 1 : theseDays / sessionLength;
+      },
+      
+      getStartPercentage: function() {
+        var days = 12 * 60 * 60 * 1000;
+        var sessionBegin = new Date('2012-01-24');
+        var sessionEnd = new Date('2012-05-24');
+        var start = new Date(this.get('start_date'));
+        
+        var startInterval = Math.ceil(((start.getTime() + 1) - sessionBegin.getTime()) / days);
+        var sessionLength = Math.ceil(((sessionEnd.getTime() + 1) - sessionBegin.getTime()) / days);
+        
+        // Add one to ensure it is a non-zero result.  If start time is
+        // before the session start time, just assume 0.
+        return (start.getTime() < sessionBegin.getTime()) ? 0 : startInterval / sessionLength;
+      }
+    });
     
     // Collections
     var Bills = Backbone.Collection.extend({
@@ -514,6 +578,9 @@
       textObject.attr('text', tempText.substring(1));
     };
     
+    // Mark as loading
+    $('#application-nav').parent().prepend('<span class="loading-temp">Loading…</span>');
+    
     // Process bill data and handle application.  JSONP callback
     // $.getJSON('data/bills.json', function(data) {
     bills = function(data) {
@@ -539,6 +606,10 @@
       
       // Handle list of bills
       var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
+      
+      // Done loading
+      $('.loading-temp').remove();
+      $('#application-nav').show();
       
       // Create bubble visualization
       visCategories(categories, billList);
