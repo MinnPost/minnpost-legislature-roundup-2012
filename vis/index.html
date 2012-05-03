@@ -194,6 +194,20 @@
 #address-chooser-form .address-radio {
   margin-left: .25em;
 }
+
+#address-chooser-form input.form-text {
+  width: 40%;
+}
+#address-chooser-form .address-error {
+  padding: .5em 1em;
+  margin: 1em;
+  border: 2px solid #B61624;
+  background-color: #E42535;
+  color: #FFFFFF;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
 </style>
 
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
@@ -379,6 +393,22 @@
             return false;
           }
         });
+      },
+      
+      filterAuthor: function(author, type) {
+        var sponsorlist = (type == 'representative') ? 'house_sponsors' : 'senate_sponsors';
+        
+        return this.filter(function (bill) {
+          if (_.isArray(bill.get(sponsorlist))) {
+            var found = _.filter(bill.get(sponsorlist), function(s) {
+              return s[0] == author;
+            });
+            return !_.isEmpty(found);
+          }
+          else {
+            return false;
+          }
+        });
       }
     });
     
@@ -410,14 +440,16 @@
     // Bills list view
     var BillsListView = Backbone.View.extend({
       categoryContainer: $('#bill-category-container'),
+      listContainer: $('#bills-list-container'),
       
       events: {
-        'click .show-bill': 'showBill'
+        'click .show-bill': 'showBill',
+        'submit form#address-chooser-form': 'showByAddress'
       },
     
       initialize: function(d) {
         // Every function that uses 'this' as the current object should be in here
-        _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'activateBill', 'filterCategory');
+        _.bindAll(this, 'render', 'showBill', 'showFirstBill', 'activateBill', 'showByAddress', 'filterCategory');
         
         this.collection = d.collection || new Bills();
         this.fullCollection = new Bills(this.collection.models);
@@ -427,7 +459,7 @@
       render: function() {
         // Render template
         var template = _.template($("#template-bill-list").html(), { bills: this.collection.models });
-        $(this.el).html(template);
+        this.listContainer.html(template);
         
         return this;
       },
@@ -454,21 +486,86 @@
         return this;
       },
       
-      showCategory: function(category) {
+      showCategory: function(category, type, author) {
+        // Get icon or image
+        var image;
+        
         // Render template
-        var template = _.template($("#template-category").html(), { category: category });
+        var template = _.template($("#template-category").html(), {
+          category: category, 
+          type: type,
+          image_url: image
+        });
         this.categoryContainer.html(template);
       },
       
-      filterCategory: function(category) {
-        var filtered = this.fullCollection.filterCategory(category);
+      showError: function(message) {
+        $('<div class="address-error">' + message + '</div>').hide().prependTo('#address-chooser-form').fadeIn();
+      },
+      
+      removeErrors: function() {
+        $('#address-chooser-form .address-error').fadeOut('fast');
+      },
+      
+      showByAddress: function(e) {
+        e.preventDefault();
+        var thisList = this;
+        var thisElem = $(e.currentTarget);
+        var type = $('input[name="author_type"]').val();
+        var address = $('input#address-chooser-address').val();
+        var mnBounds = [43.499356, -97.239209, 49.384358, -89.489226];
+        
+        // Remove any errors
+        this.removeErrors();
+        
+        // Geocode address using Mapquest becuase its terms of service are more open,
+        // though its geocoding is not the best.
+        $.getJSON('http://open.mapquestapi.com/nominatim/v1/search?format=json&json_callback=?&countrycodes=us&limit=1&q=' + encodeURI(address), function(value) {
+          // Use first response
+          value = value[0];
+          
+          // Check response
+          if (value === undefined) {
+            thisList.showError('We were unable turn your search terms, ' + address + ', into a geographical location.  Please be more specific, such as including ZIP code.');
+          }
+          // Check we are still mostly in Minnesota
+          else if (value.lat < mnBounds[0] || value.lat > mnBounds[2] || value.lon < mnBounds[1] || value.lon > mnBounds[3]) {
+            thisList.showError('Sorry, but what you are looking for is outside of Minnesota.');
+          }
+          else {
+            // Send to service
+            
+            // Filter by representative
+            thisList.filterAuthor('Warren Limmer', type);
+            $('#address-chooser').slideUp('fast');
+            $('#category-details').slideDown('fast');
+          }
+        });
+      },
+      
+      filterAuthor: function(author, type) {
+        var filtered = this.fullCollection.filterAuthor(author, type);
 
         if (_.isEmpty(filtered)) {
           // TODO: show empty message
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory(category);
+          this.showCategory(author, 'author');
+          this.render();
+          this.showFirstBill();
+        }
+      },
+      
+      filterCategory: function(category) {
+        var filtered = this.fullCollection.filterCategory(category);
+        
+        if (_.isEmpty(filtered)) {
+          // TODO: show empty message
+        }
+        else {
+          this.collection.reset(filtered);
+          this.showCategory(category, 'category');
           this.render();
           this.showFirstBill();
         }
@@ -605,7 +702,7 @@
       }
       
       // Handle list of bills
-      var billList = new BillsListView({el: $('#bills-list-container'), collection: bills });
+      var billList = new BillsListView({el: $('#minnpost-legislature-wrapper'), collection: bills });
       
       // Done loading
       $('.loading-temp').remove();
