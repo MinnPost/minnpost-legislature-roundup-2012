@@ -231,6 +231,10 @@
 #address-chooser-form input.form-text {
   width: 40%;
 }
+#address-chooser-form input.showing-label {
+  color: #999999;
+  font-style: italic;
+}
 #address-chooser-form .address-error {
   padding: .5em 1em;
   margin: 1em;
@@ -837,8 +841,18 @@
       });
       
       // Address input form
-      var inputText = 'Address to search';
-      //$('#address-chooser-address').val(inputText);
+      var inputText = 'Enter your address';
+      $('#address-chooser-address').val(inputText).addClass('showing-label')
+      .focus(function() {
+        if ($(this).val() == inputText) {
+          $(this).val('').removeClass('showing-label');
+        }
+      })
+      .blur(function() {
+        if ($(this).val() == '' || $(this).val() == inputText) {
+          $(this).val(inputText).addClass('showing-label');
+        }
+      });
     };
     
     // Get data
