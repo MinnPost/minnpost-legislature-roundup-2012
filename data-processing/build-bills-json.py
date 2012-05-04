@@ -109,7 +109,10 @@ def add_to_json(bills):
             
         sen_sponsor_ids = []
         for e in senate_sponsors:
-            sen_sponsor_ids.append(e['leg_id'])
+        	if e['name'] == 'Hayden': #sad little hack to fix Jeff Hayden's missing legid
+        		sen_sponsor_ids.append('MNL000364')
+        	else:
+        		sen_sponsor_ids.append(e['leg_id']) #build list of leg ids and leg full names
         house_sponsor_ids = []
         for e in house_sponsors:
             house_sponsor_ids.append(e['leg_id'])
@@ -153,11 +156,9 @@ def get_leg_info(legids):
 				knownlegs[legislator] = [name, party, photo, url]
 				legs.append([name, party, photo, url])
 			except:
-				knownlegs[legislator] = ['data unavailable']
+				legs.append(['data unavailable','','',''])	
     return legs
 
-#f = open('sbills.json', 'a')
-#f.write(add_to_json(signedbills+vetoedbills) + "\n")
-#f.close()
-
-print add_to_json([['HF 2046', 'SF 1958'],['HF 2821', 'SF 2424']])
+f = open('sbills.json', 'a')
+f.write(add_to_json(signedbills+vetoedbills) + "\n")
+f.close()
