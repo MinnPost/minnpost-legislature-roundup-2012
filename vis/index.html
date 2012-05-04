@@ -21,7 +21,8 @@
 <style type="text/css">
 #category-details,
 #address-chooser,
-#application-nav {
+#application-nav,
+#tab-container {
   display: none;
 }
 
@@ -235,7 +236,7 @@
     </ul>
   </div>
   
-  <div id="tab-container" class="clearfix">
+  <div id="tab-container">
     <div id="bubble-chooser" class="vis-section">
       <div id="bubble-chart"></div>
     </div>
@@ -259,6 +260,8 @@
       <div id="bill-detail-container"></div>
       <br class="clear" />
     </div>
+    
+    <br class="clear" />
   </div>
   
   <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.  Note that some legislators are not properly linked to bills they sponsor and will affect the accuracy of the address search.</p>
@@ -780,7 +783,7 @@
       
       // Done loading
       $('.loading-temp').remove();
-      $('#application-nav').show();
+      $('#application-nav, #tab-container').show();
       
       // Create bubble visualization
       visCategories(categories, billList);
