@@ -41,34 +41,50 @@
 /**
  * Nav
  */
-#application-nav ul,
-#application-nav ul li {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-#application-nav ul li {
-  display: inline;
-  margin: 0 0.5em 0 0;
-}
-#application-nav ul li a {
-  margin: 0;
-  padding: 5px 1em 3px 1em;
+#application-nav {
+   float:left;
+   width:100%;
+   background:#FFFFFF;
+   border-bottom: 1px solid #999999;
+   overflow:hidden;
+   position:relative;
 }
 #application-nav ul {
-  border-bottom: 1px solid #999999;
+   clear:left;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   left:50%;
+   text-align:center;
+}
+#application-nav ul li {
+   display:block;
+   float:left;
+   list-style:none;
+   margin:0;
+   padding:0;
+   position:relative;
+   right:50%;
+}
+#application-nav ul li a {
+   display:block;
+   margin:0 0 0 1px;
+   padding:3px 10px;
+   background:#FFFFFF;
+   text-decoration:none;
+   line-height:1.3em;
+}
+#application-nav ul li a.tab-active,
+#application-nav ul li a.tab-active:hover {
+   color:#fff;
+   background:#999999;
+   font-weight:bold;
+}
 
-}
-#application-nav ul li a.tab-active {
-  border-top: 1px solid #999999;
-  border-left: 1px solid #999999;
-  border-right: 1px solid #999999;
-  background-color: #FFFFFF;
-}
 #tab-container {
-  border-bottom: 1px solid #999999;
-  border-right: 1px solid #999999;
-  border-left: 1px solid #999999;
+	border:1px solid #999999;
 }
 
 
@@ -131,13 +147,13 @@
 }
 
 #bill-category-container a {
-  float: right;
+  float: left;
   font-size: .85em;
-  margin: .5em 2.5% 0 0;
+  margin: .5em 0 0 2.5%;
 }
 #bill-category-container h3 {
   text-align: center;
-  padding: 1em;
+  padding: 1.5em 0 .5em 0;
 }
 .bill-details-wrapper {
   margin: 1em;
@@ -231,8 +247,8 @@
   
   <div id="application-nav">
     <ul>
-      <li><a class="by-category tab-active" href="#by-category">By category</a></li>
-      <li><a class="by-address" href="#by-address">By address</a></li>
+      <li class="tab-active"><a class="by-category tab-active" href="#by-category"><span>By category</span></a></li>
+      <li><a class="by-address" href="#by-address"><span>By address</span></a></li>
     </ul>
   </div>
   
@@ -805,8 +821,7 @@
         e.preventDefault();
         if (!$('.by-category').hasClass('tab-active')) {
           $('#address-chooser').fadeOut('fast');
-          $('.by-address').toggleClass('tab-active');
-          $('.by-category').toggleClass('tab-active');
+          $('#application-nav li, #application-nav a').toggleClass('tab-active');
         }
         $('#bubble-chooser').fadeIn('fast');
         $('#category-details').hide();
@@ -815,8 +830,7 @@
         e.preventDefault();
         if (!$('.by-address').hasClass('tab-active')) {
           $('#bubble-chooser').fadeOut('fast');
-          $('.by-address').toggleClass('tab-active');
-          $('.by-category').toggleClass('tab-active');
+          $('#application-nav li, #application-nav a').toggleClass('tab-active');
         }
         $('#address-chooser').fadeIn('fast');
         $('#category-details').hide();
