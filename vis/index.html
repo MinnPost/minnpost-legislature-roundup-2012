@@ -368,9 +368,19 @@
   
     // Create basic models for bills and categories
     var Bill = Backbone.Model.extend({
+      convertDate: function(string) {
+        var dateArray = string.replace(' 00:00:00', '').split('-');
+        if (_.isArray(dateArray) && dateArray.length == 3) {
+          return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+        }
+        else {
+          return new Date();
+        }
+      },
+      
       getDays: function() {
-        var start = new Date(this.get('start_date'));
-        var end = new Date(this.get('end_date'));
+        var start = this.convertDate(this.get('start_date'));
+        var end = this.convertDate(this.get('end_date'));
         var days = 12 * 60 * 60 * 1000;
         
         // Add one to ensure it is a non-zero result.
@@ -379,8 +389,8 @@
       
       getIntervalPercentage: function() {
         var days = 12 * 60 * 60 * 1000;
-        var sessionBegin = new Date('2012-01-24');
-        var sessionEnd = new Date('2012-05-24');
+        var sessionBegin = new Date(2012, 01 - 1, 24);
+        var sessionEnd = new Date(2012, 05 - 1, 24);
         var sessionLength = Math.ceil(((sessionEnd.getTime() + 1) - sessionBegin.getTime()) / days);
         var theseDays = (this.getDays() < 3) ? 3 : this.getDays();
         
@@ -390,9 +400,9 @@
       
       getStartPercentage: function() {
         var days = 12 * 60 * 60 * 1000;
-        var sessionBegin = new Date('2012-01-24');
-        var sessionEnd = new Date('2012-05-24');
-        var start = new Date(this.get('start_date'));
+        var sessionBegin = new Date(2012, 01 - 1, 24);
+        var sessionEnd = new Date(2012, 05 - 1, 24);
+        var start = this.convertDate(this.get('start_date'));
         
         var startInterval = Math.ceil(((start.getTime() + 1) - sessionBegin.getTime()) / days);
         var sessionLength = Math.ceil(((sessionEnd.getTime() + 1) - sessionBegin.getTime()) / days);
@@ -808,6 +818,10 @@
         $('#address-chooser').fadeIn('fast');
         $('#category-details').hide();
       });
+      
+      // Address input form
+      var inputText = 'Address to search';
+      //$('#address-chooser-address').val(inputText);
     };
     
     // Get data
