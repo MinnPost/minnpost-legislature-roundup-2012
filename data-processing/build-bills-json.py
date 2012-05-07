@@ -22,7 +22,7 @@ def add_to_json(bills):
         	companiondata = {'votes': [],'sponsors':[]}
         
         title = data['title']
-        categories = data['subjects']
+        categories = mp_categorize(data['subjects'])
         billurl = data['sources'][0]['url']
         
 	bill_status = 'indeterminate' #default if for whatever reason we can't get the bill status
@@ -158,7 +158,64 @@ def get_leg_info(legids):
 			except:
 				legs.append(['data unavailable','','',''])	
     return legs
+    
+def mp_categorize(subject_list):
+	final_subjects = []
+	
+	subject_map = {
+		'Agriculture and Food' : 'Agriculture and Food' , 
+		'Animal Rights and Wildlife Issues' : 'Environment and Recreation' , 
+		'Arts and Humanities' : 'Arts and Humanities' , 
+		'Budget, Spending, and Taxes' : 'Budget, Spending and Taxes' , 
+		'Business and Consumers' : 'Business and Economy' , 
+		'Campaign Finance and Election Issues' : 'Campaign Finance and Election Issues' , 
+		'Civil Liberties and Civil Rights' : 'Social Issues' , 
+		'Commerce' : 'Business and Economy' , 
+		'Crime' : 'Crime and Drugs' , 
+		'Drugs' : 'Crime and Drugs' , 
+		'Education' : 'Education' , 
+		'Energy' : 'Energy and Technology' , 
+		'Environmental' : 'Environment and Recreation' , 
+		'Executive Branch' : 'Government' , 
+		'Family and Children Issues' : 'Social Issues' , 
+		'Federal, State, and Local Relations' : 'Government' , 
+		'Gambling and Gaming' : 'Gambling and Gaming' , 
+		'Government Reform' : 'Government' , 
+		'Guns' : 'Guns' , 
+		'Health' : 'Health and Science' , 
+		'Housing and Property' : 'Housing and Property' , 
+		'Immigration' : 'Immigration' , 
+		'Indigenous Peoples' : 'Social Issues' , 
+		'Insurance' : 'Insurance' , 
+		'Judiciary' : 'Legal' , 
+		'Labor and Employment' : 'Business and Economy' , 
+		'Legal Issues' : 'Legal' , 
+		'Legislative Affairs' : 'Government' , 
+		'Military' : 'Military' , 
+		'Municipal and County Issues' : 'Government' , 
+		'Nominations' : '' , 
+		'Other' : '' , 
+		'Public Services' : 'Government' , 
+		'Recreation' : 'Environment and Recreation' , 
+		'Reproductive Issues' : 'Reproductive Issues' , 
+		'Resolutions' : '' , 
+		'Science and Medical Research' : 'Health and Science' , 
+		'Senior Issues' : 'Social Issues' , 
+		'Sexual Orientation and Gender Issues' : 'Social Issues' , 
+		'Social Issues' : 'Social Issues' , 
+		'State Agencies' : '' , 
+		'Technology and Communication' : 'Energy and Technology' , 
+		'Trade' : 'Business and Economy' , 
+		'Transportation' : 'Transporation' , 
+		'Welfare and Poverty' : 'Welfare and Poverty' 
+	}
+	
+	for subject in subject_list:
+		newsubject = subject_map[subject]
+		if newsubject not in final_subjects and newsubject != '':
+			final_subjects.append(newsubject)
+	return final_subjects
 
-f = open('sbills.json', 'a')
+f = open('bills.json', 'a')
 f.write(add_to_json(signedbills+vetoedbills) + "\n")
 f.close()
