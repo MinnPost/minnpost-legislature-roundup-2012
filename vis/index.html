@@ -212,6 +212,31 @@
   margin-bottom: -5px;
 }
 
+.bs-icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("https://s3.amazonaws.com/data.minnpost/js/bootstrap-2.0.2/img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+  margin-right: 3px;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+.bs-icon-signed {
+  background-position: -288px 0;
+}
+.bs-icon-vetoed {
+  background-position: -312px 0;
+}
+.bs-icon-indeterminate {
+  background-position: -433px -96px;
+}
+.bill-status .bs-icon {
+  margin: 7px 0 0 5px;
+}
 
 /**
  * Search
@@ -295,7 +320,7 @@
   <h4>Bills</h4>
   <ul>
     <% _.each( bills, function( b ) { %>
-      <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><%= b.get('bill') %></a></li>
+      <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><i class="bs-icon bs-icon-<%= b.get('bill_status') %>"></i> <%= b.get('bill') %></a></li>
     <% }); %>
   </ul>
 </script>
@@ -303,7 +328,7 @@
 <!-- Template for bill details -->
 <script id="template-bill" type="text/template">
   <div class="bill-details-wrapper">
-    <div class="bill-status"><%= bill.get('bill_status') %></div>
+    <div class="bill-status"><%= bill.get('bill_status') %> <i class="bs-icon bs-icon-<%= bill.get('bill_status') %>"></i></div>
     <h4 class="bill-title"><%= bill.get('bill') %></h4>
     <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">See the full text.</a></p>
     
