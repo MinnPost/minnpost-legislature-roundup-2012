@@ -126,6 +126,14 @@
   padding-left: 1em;
   padding-bottom: .5em;
 }
+#bills-list-container ul {
+  height: 313px;
+  overflow: hidden;
+  overflow-y: scroll;
+  border-top: 1px solid #EBEBEB;
+  border-left: 1px solid #EBEBEB;
+  border-bottom: 1px solid #EBEBEB;
+}
 #bills-list-container ul,
 #bills-list-container ul li {
   list-style: none;
@@ -296,7 +304,7 @@
     
     <div id="category-details">
       <div id="bill-category-container"></div>
-      <div id="bills-list-container"></div>
+      <div id="bills-list-container" class="fsScrollbar"></div>
       <div id="bill-detail-container"></div>
       <br class="clear" />
     </div>
@@ -313,11 +321,16 @@
 <!-- Template for bill list -->
 <script id="template-bill-list" type="text/template">
   <h4>Bills</h4>
-  <ul>
-    <% _.each( bills, function( b ) { %>
-      <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><i class="bs-icon bs-icon-<%= b.get('bill_status') %>"></i> <%= b.get('bill') %></a></li>
-    <% }); %>
-  </ul>
+  <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
+  <div class="viewport">
+    <div class="overview">
+      <ul>
+        <% _.each( bills, function( b ) { %>
+          <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><i class="bs-icon bs-icon-<%= b.get('bill_status') %>"></i> <%= b.get('bill') %></a></li>
+        <% }); %>
+      </ul>
+    </div>
+  </div>
 </script>
 
 <!-- Template for bill details -->
