@@ -328,7 +328,7 @@
     <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">See the full text.</a></p>
     
     
-    <% if (typeof bill.get('start_date') != 'undefined') { %>
+    <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
       <div class="bill-timeline">
         <h5>Time: <%= bill.getDays() %> days</h5>
         <div class="bill-timeline-container">
@@ -342,7 +342,13 @@
       <h5>House</h5>
       <% if (typeof bill.get('house_ayes') != 'undefined') { %>
         <div class="bill-house-votes bill-votes">
-          <div><%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %></div>
+          <div>
+            <% if (bill.get('house_ayes') < 0) { %>
+              &nbsp;
+            <% } else { %>
+              <%= bill.get('house_ayes') %>-<%= bill.get('house_nays') %>
+            <% } %>
+          </div>
         </div>
       <% } %>
       
@@ -366,7 +372,13 @@
       <h5>Senate</h5>
       <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
         <div class="bill-senate-votes bill-votes">
-          <div><%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %></div>
+          <div>
+            <% if (bill.get('senate_ayes') < 0) { %>
+              &nbsp;
+            <% } else { %>
+              <%= bill.get('senate_ayes') %>-<%= bill.get('senate_nays') %>
+            <% } %>
+          </div>
         </div>
       <% } %>
       
@@ -412,7 +424,7 @@
     // Create basic models for bills and categories
     var Bill = Backbone.Model.extend({
       convertDate: function(string) {
-        var dateArray = string.replace(' 00:00:00', '').split('-');
+        var dateArray = string.replace(/( [0-9]{2}:[0-9]{2}:[0-9]{2}$)/, '').split('-');
         if (_.isArray(dateArray) && dateArray.length == 3) {
           return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
         }
