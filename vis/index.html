@@ -126,23 +126,22 @@
   padding-left: 1em;
   padding-bottom: .5em;
 }
-#bills-list-container ul {
+#bills-list-container .bills-list {
   height: 417px;
-  overflow: hidden;
-  overflow-y: scroll;
+  overflow: auto;
   border-top: 1px solid #EBEBEB;
   border-left: 1px solid #EBEBEB;
   border-bottom: 1px solid #EBEBEB;
   direction: rtl;
-}
-#bills-list-container ul li {
-  direction: ltr;
 }
 #bills-list-container ul,
 #bills-list-container ul li {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+#bills-list-container ul li {
+  direction: ltr;
 }
 #bills-list-container ul li a {
   display: block;
@@ -280,7 +279,6 @@
 </style>
 
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
-  
   <div id="application-nav">
     <ul>
       <li class="tab-active"><a class="by-category tab-active" href="#by-category"><span>By category</span></a></li>
@@ -325,15 +323,12 @@
 <!-- Template for bill list -->
 <script id="template-bill-list" type="text/template">
   <h4>Bills</h4>
-  <div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
-  <div class="viewport">
-    <div class="overview">
-      <ul>
-        <% _.each( bills, function( b ) { %>
-          <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><i class="bs-icon bs-icon-<%= b.get('bill_status') %>"></i> <%= b.get('bill') %></a></li>
-        <% }); %>
-      </ul>
-    </div>
+  <div class="bills-list">
+    <ul>
+      <% _.each( bills, function( b ) { %>
+        <li><a data-id="<%= b.cid %>" class="show-bill" href="#show-bill"><i class="bs-icon bs-icon-<%= b.get('bill_status') %>"></i> <%= b.get('bill') %></a></li>
+      <% }); %>
+    </ul>
   </div>
 </script>
 
