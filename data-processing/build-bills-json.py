@@ -22,6 +22,11 @@ def add_to_json(bills):
         	companiondata = {'votes': [],'sponsors':[]}
         
         title = data['title']
+        
+        #add footnote to voter ID amendment
+        if bill = 'HF 2738':
+        	title += "<p class='footnote'>HF 2738, the Voter ID constitutional amendment, was symbolically vetoed by Governor Dayton. The amendment will still appear on the ballot in November because constitutional amendments do not require the approval of the governor.</p>" 
+        
         categories = mp_categorize(data['subjects'])
         billurl = data['sources'][0]['url']
         
