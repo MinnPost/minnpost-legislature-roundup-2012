@@ -339,7 +339,7 @@
   <div class="bill-details-wrapper">
     <div class="bill-status"><%= bill.get('bill_status') %> <i class="bs-icon bs-icon-<%= bill.get('bill_status') %>"></i></div>
     <h4 class="bill-title"><%= bill.get('bill') %></h4>
-    <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">See the full text.</a></p>
+    <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">View bill status and details.</a></p>
     
     
     <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
