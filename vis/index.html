@@ -721,6 +721,8 @@
     var bubbleMaxRadius = 60;
     var xBubbleSpacing = 50;
     var yBubbleSpacing = 160;
+    //#156DAC + #15AC54
+    var bubbleColors = ['156DAC', '1571A6', '1575A0', '15799A', '157D94', '15828E', '158688', '158A82', '158E7D', '159277', '159771', '159B6B', '159F65', '15A35F', '15A759', '15AC54'];
   
     // Visualize categories with a bubble layout.
     function visCategories(categories, billList) {
@@ -745,6 +747,7 @@
         var minArea = bubbleMaxRadius * bubbleMinRadius * Math.PI;
         var thisArea = (percentage * (maxArea - minArea)) + minArea;
         var radius = Math.sqrt(thisArea / Math.PI);
+        var color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
         
         // Update x and y positions
         xPos += 150;
@@ -758,7 +761,7 @@
           .data("spreadX", xPos)
           .data("spreadY", yPos)
           .data("radius", radius)
-          .attr("fill", Raphael.rgb(255, Math.random() * 255, 0))
+          .attr("fill", Raphael.rgb(hexToRGB(color, 'R'), hexToRGB(color, 'G'), hexToRGB(color, 'B')))
           .attr("opacity", "0.7")
           .attr("stroke-width", 0.5)
           .attr("cursor", "pointer")
@@ -788,6 +791,24 @@
     
       }
       spreadVis(bubbleChart);
+    };
+    
+    // Function to convert hex to rgb
+    function hexToRGB(h, part) {
+      h = (h.charAt(0) == '#') ? h.substring(1,7) : h;
+      switch (part) {
+        case 'R':
+          return parseInt(h.substring(0, 2), 16);
+          break;
+          
+        case 'G':
+          return parseInt(h.substring(2, 4), 16);
+          break;
+          
+        case 'B':
+          return parseInt(h.substring(4, 6), 16);
+          break;
+      }
     };
   
     // Move the bubbles around.
