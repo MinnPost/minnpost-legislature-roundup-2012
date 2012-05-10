@@ -515,6 +515,7 @@
       
       filterAuthor: function(author, type) {
         var sponsorlist = (type == 'representative') ? 'house_sponsors' : 'senate_sponsors';
+        
         if (!_.isArray(author)) {
           author = [author];
         }
@@ -667,9 +668,11 @@
 
               // Filter by representative
               if (!_.isEmpty(names)) {
-                var filtered = thisList.filterAuthor(names, type);
+                // Get last name found
+                var name = names[names.length - 1];
+                var filtered = thisList.filterAuthor(name, type, true);
                 if (_.isEmpty(filtered)) {
-                  thisList.showError('No bills found sponsored by your legislator(s), <em>' + names.join(', ') + '</em>.  This could be an issue with the data quality and may not accurately reflect the activities of these legislator(s).');
+                  thisList.showError('No bills found sponsored by your legislator(s), <em>' + name + '</em>.  This could be an issue with the data quality and may not accurately reflect the activities of these legislator(s).');
                 }
                 else {
                   $('#address-chooser').slideUp('fast');
