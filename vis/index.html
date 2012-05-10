@@ -729,22 +729,29 @@
       var xPos = -50;
       var yPos = 165;
       var bubbleColors = ['156DAC', '1571A6', '1575A0', '15799A', '157D94', '15828E', '158688', '158A82', '158E7D', '159277', '159771', '159B6B', '159F65', '15A35F', '15A759', '15AC54'];
-    var reordered = [];
+      var reordered = [];
       
       // Find the max number in a category
       var maxBills = 1;
       for (var c in categories) {
         maxBills = (categories[c].length > maxBills) ? categories[c].length : maxBills;
+        // For re-ordering
+        reordered.push({ name: c, bills: categories[c]});
       }
+      
+      // Sort categories by number of bills
+      reordered = reordered.sort(function(a, b) {
+        return b.bills.length - a.bills.length;
+      })
       
       // Base Raphael canvas
       var bubbleChart = Raphael(document.getElementById("bubble-chart"), width, height);
     
       // Create bubbles
-      for (var category in categories) {
+      for (var i in reordered) {
         // Make area proportional given max bills in a category.  This could
         // be a lot more elegant and efficient.
-        var percentage = categories[category].length / maxBills;
+        var percentage = reordered[i].bills.length / maxBills;
         var maxArea = bubbleMaxRadius * bubbleMaxRadius * Math.PI;
         var minArea = bubbleMaxRadius * bubbleMinRadius * Math.PI;
         var thisArea = (percentage * (maxArea - minArea)) + minArea;
@@ -759,7 +766,7 @@
         }
     
         var circle = bubbleChart.circle(Math.random() * (975 - radius), Math.random() * (height - radius), 0)
-          .data("name", category)
+          .data("name", reordered[i].name)
           .data("spreadX", xPos)
           .data("spreadY", yPos)
           .data("radius", radius)
@@ -786,7 +793,7 @@
           .attr("fill", "#444")
           .data("spreadX", xPos)
           .data("spreadY", yPos + 20);
-        text = wrapText(category, text);
+        text = wrapText(reordered[i].name, text);
         
         var enlarge = Raphael.animation({"r": radius}, 1000, "easeIn");
         circle.animate(enlarge.delay(Math.random() * 1000));
