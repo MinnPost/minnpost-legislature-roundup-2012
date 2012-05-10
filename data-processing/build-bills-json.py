@@ -23,10 +23,6 @@ def add_to_json(bills):
         
         title = data['title']
         
-        #add footnote to voter ID amendment
-        if bill = 'HF 2738':
-        	title += "<p class='footnote'>HF 2738, the Voter ID constitutional amendment, was symbolically vetoed by Governor Dayton. The amendment will still appear on the ballot in November because constitutional amendments do not require the approval of the governor.</p>" 
-        
         categories = mp_categorize(data['subjects'])
         billurl = data['sources'][0]['url']
         
@@ -58,6 +54,12 @@ def add_to_json(bills):
 					startdate_month = int(startdate[5:7]) #update startdate_month for further tests
 	except:
 		bill_status = 'actions unavailable'
+
+        #add footnote to voter ID amendment and set status to vetoed
+        if bill[0] == 'HF 2738':
+        	title += "<p class='footnote'>HF 2738, the Voter ID constitutional amendment, was symbolically vetoed by Governor Dayton. The amendment will still appear on the ballot in November because constitutional amendments do not require the approval of the governor.</p>"
+        	bill_status = 'vetoed'
+        	categories.append('Vetoed')
 
         
         #get the vote totals for the House. Sadly, openstates doesn't have data for MN Senate votes
@@ -127,14 +129,14 @@ def add_to_json(bills):
         
         #if a bill has senate votes and house votes and is not vetoed, lets assume it has been signed
 
-        total_votes = int(votesfor_house) + int(votesagainst_house) + int(votesfor_senate) + int(votesagainst_senate)
+        total_votes = float(votesfor_house) + float(votesagainst_house) + float(votesfor_senate) + float(votesagainst_senate)
 
         if total_votes > 160 and bill_status == 'indeterminate':
         	bill_status = 'signed'
         
         #controversiality
-        total_no_votes = int(votesagainst_house) + int(votesagainst_senate)
-        if (total_no_votes/total_votes) > .3:
+        total_no_votes = float(votesagainst_house) + float(votesagainst_senate)
+        if (total_no_votes/total_votes) > 0.3:
         	categories.append('Controversial')
         
         #create a dictionary of the bill info and write it to the all_bills dict
@@ -232,6 +234,8 @@ def mp_categorize(subject_list):
 			final_subjects.append(newsubject)
 	return final_subjects
 
-f = open('bills.json', 'a')
-f.write(add_to_json(signedbills+vetoedbills) + "\n")
-f.close()
+#f = open('bills.json', 'a')
+#f.write(add_to_json(signedbills+vetoedbills) + "\n")
+#f.close()
+
+print add_to_json([['HF 2738', 'SF 1577']])
