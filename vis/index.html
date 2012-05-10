@@ -93,13 +93,9 @@
 .loading-temp {
   display: block;
   text-align: center;
-  padding: .5em 1em;
-  margin: 1em 0;
-  border: 2px solid #E47525;
+  padding: 6em 1em;
   color: #E47525;
-  border-radius: 3px;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
+  text-transform: uppercase;
 }
 
 /**
@@ -901,7 +897,7 @@
           .data('name', reordered[i].name);
         
         // Fade in image
-        var fadeIn = Raphael.animation({'opacity': '0.7'}, 1000, 'easeIn');
+        var fadeIn = Raphael.animation({'opacity': '0.6'}, 1000, 'easeIn');
         image.animate(fadeIn.delay(Math.random() * 1000));
         
         // Create set for handling events.  The this in the
@@ -918,8 +914,8 @@
                 i.attr('opacity', '1.0');
               })
               .mouseout(function() {
-                c.attr('opacity', '0.7');
-                i.attr('opacity', '0.7');
+                c.attr('opacity', '0.8');
+                i.attr('opacity', '0.6');
               })
               .click(function() {
                 // Handle filtering of Bills list and display
