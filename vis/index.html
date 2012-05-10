@@ -393,7 +393,12 @@
           <ul>
             <% _.each( bill.get('house_sponsors'), function( s ) { %>
               <% if (s[3]) { %>
-                <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+                <li>
+                  <a target="_blank" href="<%= s[3] %>"><%= s[0] %></a>
+                  <% if (s[1]) { %>
+                    (<%= s[1].charAt(0) %>)
+                  <% } %>
+                </li>
               <% } else { %>
                 <li><%= s[0] %></li>
               <% } %>
@@ -423,7 +428,12 @@
           <ul>
             <% _.each( bill.get('senate_sponsors'), function( s ) { %>
               <% if (s[3]) { %>
-                <li><a target="_blank" href="<%= s[3] %>"><%= s[0] %></a></li>
+                <li>
+                  <a target="_blank" href="<%= s[3] %>"><%= s[0] %></a>
+                  <% if (s[1]) { %>
+                    (<%= s[1].charAt(0) %>)
+                  <% } %>
+                </li>
               <% } else { %>
                 <li><%= s[0] %></li>
               <% } %>
