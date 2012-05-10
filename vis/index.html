@@ -730,6 +730,7 @@
       var yPos = 165;
       var bubbleColors = ['156DAC', '1571A6', '1575A0', '15799A', '157D94', '15828E', '158688', '158A82', '158E7D', '159277', '159771', '159B6B', '159F65', '15A35F', '15A759', '15AC54'];
       var reordered = [];
+      var customColors = { 'Vetoed': '323232' };
       
       // Find the max number in a category
       var maxBills = 1;
@@ -757,6 +758,11 @@
         var thisArea = (percentage * (maxArea - minArea)) + minArea;
         var radius = Math.sqrt(thisArea / Math.PI);
         var color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+        
+        // Custom color
+        if (typeof customColors[reordered[i].name] != 'undefined') {
+          color = customColors[reordered[i].name];
+        }
         
         // Update x and y positions
         xPos += 150;
