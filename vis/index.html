@@ -758,6 +758,40 @@
           this.render();
           this.showFirstBill();
         }
+      },
+      
+      getCatIcon: function(cat) {
+        icons = {
+          'Government': 'noun_project_1761',
+          'Energy and Technology': 'noun_project_2075',
+          'Housing and Property': 'noun_project_1439',
+          'Campaign Finance and Election Issues': 'noun_project_287',
+          'Reproductive Issues': 'noun_project_626',
+          'Environment and Recreation': 'noun_project_479',
+          'Health and Science': 'noun_project_1868',
+          'Military': 'noun_project_1697',
+          'Welfare and poverty': 'noun_project_620',
+          'Budget, Spending and Taxes': 'noun_project_925',
+          'Insurance': 'noun_project_1675',
+          'Business and Economy': 'noun_project_1640',
+          'Education': 'noun_project_1051',
+          'Immigration': 'noun_project_31',
+          'Agriculture and Food': 'noun_project_741',
+          'Arts and Humanities': 'noun_project_1554',
+          'Guns': 'noun_project_138',
+          'Gambling and Gaming': 'noun_project_1740',
+          'Crime and Drugs': 'noun_project_2039',
+          'Social Issues': 'noun_project_288',
+          'Vetoed': 'noun_project_558',
+          'Controversial': 'noun_project_1635'
+        }
+        
+        if (typeof icons[cat] != 'undefined') {
+          return icons[cat];
+        }
+        else {
+          return '';
+        }
       }
     });
     
@@ -826,40 +860,76 @@
           yPos += yBubbleSpacing;
         }
     
-        var circle = bubbleChart.circle(Math.random() * (975 - radius), Math.random() * (height - radius), 0)
-          .data("name", reordered[i].name)
-          .data("spreadX", xPos)
-          .data("spreadY", yPos)
-          .data("radius", radius)
-          .attr("fill", Raphael.rgb(hexToRGB(color, 'R'), hexToRGB(color, 'G'), hexToRGB(color, 'B')))
-          .attr("opacity", "0.7")
-          .attr("stroke-width", 0.5)
-          .attr("cursor", "pointer")
-          .mouseover(function() {
-            this.attr("opacity", "1.0");
-          })
-          .mouseout(function() {
-            this.attr("opacity", "0.7");
-          })
-          .click(function() {
-            // Handle filtering of Bills list and display
-            if (typeof billList != 'undefined') {
-              billList.filterCategory(this.data("name").replace('\n', ''));
-              $('#bubble-chooser').slideUp('fast');
-              $('#category-details').slideDown('fast');
-            }
-          });
+        // Create circle with proportional radius and starting in
+        // a random spot (as it will be positioned later).  Attached
+        // data for the position and radius.
+        var circle = bubbleChart.circle(Math.random() * (width - radius), Math.random() * (height - radius), 0)
+          .data('name', reordered[i].name)
+          .data('spreadX', xPos)
+          .data('spreadY', yPos - radius)
+          .data('radius', radius)
+          .attr('fill', Raphael.rgb(hexToRGB(color, 'R'), hexToRGB(color, 'G'), hexToRGB(color, 'B')))
+          .attr('opacity', '0.7')
+          .attr('stroke-width', 0.5)
+          .attr('cursor', 'pointer');
+          
+        // Text for each bubble, attaching data for spreading.
         var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy)
-          .attr("font-size", 12)
-          .attr("fill", "#444")
-          .data("spreadX", xPos)
-          .data("spreadY", yPos + 20);
+          .attr('font-size', 12)
+          .attr('fill', '#444')
+          .attr('cursor', 'pointer')
+          .data('spreadX', xPos)
+          .data('spreadY', yPos + 20)
+          .data('name', reordered[i].name);
         text = wrapText(reordered[i].name, text);
         
-        var enlarge = Raphael.animation({"r": radius}, 1000, "easeIn");
+        // Create image for for the bubble.
+        var image = billList.getCatIcon(reordered[i].name);
+        var image = bubbleChart.image('img/' + image + '.png', 
+          Math.random() * (width - radius), Math.random() * (height - radius), 
+          radius * .9, radius * .9)
+          .attr('opacity', '0.7')
+          .attr('cursor', 'pointer')
+          .data('spreadX', xPos - (radius * .5))
+          .data('spreadY', yPos - (radius * 1.5))
+          .data('name', reordered[i].name);
+        
+        // Animate the circle to its full radius
+        var enlarge = Raphael.animation({'r': radius}, 1000, 'easeIn');
         circle.animate(enlarge.delay(Math.random() * 1000));
-    
+        
+        // Create set for handling events.  The this in the
+        // event seems to refer to the specific element
+        // and not the event.  Also, we need to use
+        // closure to be able to refer to all the objects
+        // on events.
+        var setIt = (function(paper, bL, c, i, t) {
+          return function() {
+            var set = paper.set();
+            set.push(c ).push(i).push(t)
+              .mouseover(function() {
+                c.attr('opacity', '1.0');
+                i.attr('opacity', '1.0');
+              })
+              .mouseout(function() {
+                c.attr('opacity', '0.7');
+                i.attr('opacity', '0.7');
+              })
+              .click(function() {
+                // Handle filtering of Bills list and display
+                if (typeof bL != 'undefined') {
+                  bL.filterCategory(this.data('name').replace('\n', ''));
+                  $('#bubble-chooser').slideUp('fast');
+                  $('#category-details').slideDown('fast');
+                }
+              });
+          
+          }
+        })(bubbleChart, billList, circle, image, text);
+        setIt();
       }
+      
+      // Position elements
       spreadVis(bubbleChart);
     };
     
@@ -884,12 +954,21 @@
     // Move the bubbles around.
     function spreadVis(paper) {
       paper.forEach(function(el) {
-        if (el.type === "circle") {
-          var spread = Raphael.animation({"cx": el.data("spreadX"), "cy": el.data("spreadY") - el.data("radius")}, 1000, "backOut");
+        // Position elements, pulling position from their data, and 
+        // create animation
+        if (el.type === 'circle') {
+          var spread = Raphael.animation({
+            'cx': el.data('spreadX'), 
+            'cy': el.data('spreadY')
+          }, 1000, 'backOut');
           el.animate(spread.delay(Math.random() * 1000));
-        } else if (el.type === "text") {
-          var textSpread = Raphael.animation({"x": el.data("spreadX"), "y": el.data("spreadY")}, 1000, "backOut");
-          el.animate(textSpread.delay(Math.random() * 1000));
+        } 
+        else if (el.type === 'text' || el.type === 'image') {
+          var spread = Raphael.animation({
+            'x': el.data('spreadX'), 
+            'y': el.data('spreadY')
+          }, 1000, 'backOut');
+          el.animate(spread.delay(Math.random() * 1000));
         }
       });
     };
@@ -901,7 +980,7 @@
       var tempText = '';
       
       for (var i = 0; i < words.length; i++) {
-        textObject.attr('text', tempText + " " + words[i]);
+        textObject.attr('text', tempText + ' ' + words[i]);
         if (textObject.getBBox().width > maxWidth) {
           tempText += '\n' + words[i];
         }
@@ -909,7 +988,7 @@
           tempText += ' ' + words[i];
         }
       }
-      textObject.attr('text', tempText.substring(1));
+      return textObject.attr('text', tempText.substring(1));
     };
     
     // Mark as loading
