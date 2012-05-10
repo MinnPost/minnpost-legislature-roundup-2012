@@ -251,7 +251,7 @@
 .bs-icon-vetoed {
   background-position: -312px 0;
 }
-.bs-icon-indeterminate {
+.bs-icon-pending {
   background-position: -433px -96px;
 }
 .bill-status .bs-icon {
@@ -476,6 +476,14 @@
   
     // Create basic models for bills and categories
     var Bill = Backbone.Model.extend({
+      sessionBegin: function() {
+        return new Date(2012, 01 - 1, 24);
+      },
+      
+      sessionEnd: function() {
+        return new Date(2012, 05 - 1, 10);
+      },
+      
       convertDate: function(string) {
         var dateArray = string.replace(/( [0-9]{2}:[0-9]{2}:[0-9]{2}$)/, '').split('-');
         if (_.isArray(dateArray) && dateArray.length == 3) {
@@ -497,8 +505,8 @@
       
       getIntervalPercentage: function() {
         var days = 12 * 60 * 60 * 1000;
-        var sessionBegin = new Date(2012, 01 - 1, 24);
-        var sessionEnd = new Date(2012, 05 - 1, 24);
+        var sessionBegin = this.sessionBegin();
+        var sessionEnd = this.sessionEnd();
         var sessionLength = Math.ceil(((sessionEnd.getTime() + 1) - sessionBegin.getTime()) / days);
         var theseDays = (this.getDays() < 3) ? 3 : this.getDays();
         
@@ -508,8 +516,8 @@
       
       getStartPercentage: function() {
         var days = 12 * 60 * 60 * 1000;
-        var sessionBegin = new Date(2012, 01 - 1, 24);
-        var sessionEnd = new Date(2012, 05 - 1, 24);
+        var sessionBegin = this.sessionBegin();
+        var sessionEnd = this.sessionEnd();
         var start = this.convertDate(this.get('start_date'));
         
         var startInterval = Math.ceil(((start.getTime() + 1) - sessionBegin.getTime()) / days);
@@ -813,8 +821,8 @@
       var yPos = 165;
       var bubbleColors = ['156DAC', '1571A6', '1575A0', '15799A', '157D94', '15828E', '158688', '158A82', '158E7D', '159277', '159771', '159B6B', '159F65', '15A35F', '15A759', '15AC54'];
       var reordered = [];
-      var customColors = { 'Vetoed': '323232' };
-      var customSorts = { 'Vetoed': -1 };
+      var customColors = { 'Vetoed': '323232', 'Controversial': 'E31C2D' };
+      var customSorts = { 'Vetoed': -1, 'Controversial': -2 };
       
       // Find the max number in a category
       var maxBills = 1;
