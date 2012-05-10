@@ -731,6 +731,7 @@
       var bubbleColors = ['156DAC', '1571A6', '1575A0', '15799A', '157D94', '15828E', '158688', '158A82', '158E7D', '159277', '159771', '159B6B', '159F65', '15A35F', '15A759', '15AC54'];
       var reordered = [];
       var customColors = { 'Vetoed': '323232' };
+      var customSorts = { 'Vetoed': -1 };
       
       // Find the max number in a category
       var maxBills = 1;
@@ -742,7 +743,16 @@
       
       // Sort categories by number of bills
       reordered = reordered.sort(function(a, b) {
-        return b.bills.length - a.bills.length;
+        // Handle custom sorts, otherwise just sort by length.
+        if (typeof customSorts[a.name] != 'undefined') {
+          return 0 - customSorts[a.name];
+        }
+        else if (typeof customSorts[b.name] != 'undefined') {
+          return customSorts[b.name];
+        }
+        else {
+          return b.bills.length - a.bills.length;
+        }
       })
       
       // Base Raphael canvas
