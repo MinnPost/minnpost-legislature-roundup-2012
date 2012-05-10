@@ -874,6 +874,10 @@
           .attr('opacity', '0.7')
           .attr('stroke-width', 0.5)
           .attr('cursor', 'pointer');
+        
+        // Animate the circle to its full radius
+        var enlarge = Raphael.animation({'r': radius}, 1000, 'easeIn');
+        circle.animate(enlarge.delay(Math.random() * 1000));
           
         // Text for each bubble, attaching data for spreading.
         var text = bubbleChart.text(circle.attrs.cx, circle.attrs.cy)
@@ -890,15 +894,15 @@
         var image = bubbleChart.image('img/' + image + '.png', 
           Math.random() * (width - radius), Math.random() * (height - radius), 
           radius * .9, radius * .9)
-          .attr('opacity', '0.7')
+          .attr('opacity', '0.1')
           .attr('cursor', 'pointer')
           .data('spreadX', xPos - (radius * .5))
           .data('spreadY', yPos - (radius * 1.5))
           .data('name', reordered[i].name);
         
-        // Animate the circle to its full radius
-        var enlarge = Raphael.animation({'r': radius}, 1000, 'easeIn');
-        circle.animate(enlarge.delay(Math.random() * 1000));
+        // Fade in image
+        var fadeIn = Raphael.animation({'opacity': '0.7'}, 1000, 'easeIn');
+        image.animate(fadeIn.delay(Math.random() * 1000));
         
         // Create set for handling events.  The this in the
         // event seems to refer to the specific element
