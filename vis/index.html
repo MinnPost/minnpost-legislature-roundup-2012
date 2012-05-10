@@ -581,7 +581,7 @@
       },
       
       comparator: function(bill) {
-        return bill.get('bill_status');
+        return (bill.get('bill_status') == 'pending') ? 'zzz' : bill.get('bill_status');
       }
     });
     
