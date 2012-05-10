@@ -88,6 +88,21 @@
  */
 
 /**
+ * Loading
+ */
+.loading-temp {
+  display: block;
+  text-align: center;
+  padding: .5em 1em;
+  margin: 1em 0;
+  border: 2px solid #E47525;
+  color: #E47525;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+}
+
+/**
  * Layout
  */
 #minnpost-legislature-wrapper {
@@ -869,7 +884,7 @@
     };
     
     // Mark as loading
-    $('#application-nav').parent().prepend('<span class="loading-temp">Loading…</span>');
+    $('<span class="loading-temp">Loading…</span>').hide().prependTo($('#application-nav').parent()).fadeIn();
     
     // Process bill data and handle application.  JSONP callback
     // $.getJSON('data/bills.json', function(data) {
@@ -898,7 +913,7 @@
       var billList = new BillsListView({el: $('#minnpost-legislature-wrapper'), collection: bills });
       
       // Done loading
-      $('.loading-temp').remove();
+      $('.loading-temp').fadeOut();
       $('#application-nav, #tab-container').show();
       
       // Create bubble visualization
