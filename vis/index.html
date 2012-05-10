@@ -189,7 +189,7 @@
 #bill-detail-container .bill-status {
   float: right;
   text-transform: uppercase;
-  margin-bottom: 0 0 .5em .5em; 
+  margin: 0 0 .5em .5em; 
   font-size: 1.5em;
   padding: .5em 1.5em;
   background-color: #EBEBEB;
@@ -449,7 +449,15 @@
 <!-- Template for category -->
 <script id="template-category" type="text/template">
   <a class="all-categories" href="#all-categories">&lt; back</a>
-  <h3><% if (typeof image_url != 'undefined') { %><img class="category-image" src="<%= image_url %>" /> <% } %> <%= category %></h3>
+  <h3>
+    <% if (typeof sponsor != 'undefined' && typeof sponsor[2] != 'undefined') { %>
+      <img class="category-image" src="<%= sponsor[2] %>" /> 
+    <% } %>
+    <%= category %>
+    <% if (typeof sponsor != 'undefined' && typeof sponsor[1] != 'undefined') { %>
+      (<%= sponsor[1].charAt(0) %>)
+    <% } %>
+  </h3>
 </script>
 <!-- End templates -->
 
@@ -512,14 +520,14 @@
         return (start.getTime() < sessionBegin.getTime()) ? 0 : startInterval / sessionLength;
       },
       
-      getImageURL: function(author, type) {
+      getSponsorData: function(author, type) {
         var sponsorlist = (type == 'representative') ? 'house_sponsors' : 'senate_sponsors';
         var sponsors = this.get(sponsorlist);
 
         if (_.isArray(sponsors)) {
           for (var s in sponsors) {
             if (sponsors[s][0] == author) {
-              return sponsors[s][2];
+              return sponsors[s];
             }
           }
         }
@@ -643,12 +651,9 @@
         return this;
       },
       
-      showCategory: function(category, image) {
+      showCategory: function(data) {
         // Render template
-        var template = _.template($("#template-category").html(), {
-          category: category, 
-          image_url: image
-        });
+        var template = _.template($("#template-category").html(), data);
         this.categoryContainer.html(template);
       },
       
@@ -730,7 +735,10 @@
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory(author, this.collection.at(0).getImageURL(author, type));
+          this.showCategory({
+            category: author, 
+            sponsor: this.collection.at(0).getSponsorData(author, type)
+          });
           this.render();
           this.showFirstBill();
         }
@@ -746,7 +754,7 @@
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory(category);
+          this.showCategory({ category: category });
           this.render();
           this.showFirstBill();
         }
