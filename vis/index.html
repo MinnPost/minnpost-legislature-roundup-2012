@@ -738,8 +738,13 @@
     
       // Create bubbles
       for (var category in categories) {
-        // Make radius proportional given max bills in a category
-        var radius = ((categories[category].length / maxBills) * (bubbleMaxRadius - bubbleMinRadius)) + bubbleMinRadius;
+        // Make area proportional given max bills in a category.  This could
+        // be a lot more elegant and efficient.
+        var percentage = categories[category].length / maxBills;
+        var maxArea = bubbleMaxRadius * bubbleMaxRadius * Math.PI;
+        var minArea = bubbleMaxRadius * bubbleMinRadius * Math.PI;
+        var thisArea = (percentage * (maxArea - minArea)) + minArea;
+        var radius = Math.sqrt(thisArea / Math.PI);
         
         // Update x and y positions
         xPos += 150;
