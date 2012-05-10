@@ -899,15 +899,16 @@
           .data('name', reordered[i].name);
         text = wrapText(reordered[i].name, text);
         
-        // Create image for for the bubble.
+        // Create image for for the bubble.  A slight offset
+        // on spread for centering.
         var image = billList.getCatIcon(reordered[i].name);
         var image = bubbleChart.image('https://s3.amazonaws.com/data.minnpost/projects/mn-legislature-roundup-2012/icons/' + image + '.png', 
           Math.random() * (width - radius), Math.random() * (height - radius), 
           radius * .9, radius * .9)
           .attr('opacity', '0.1')
           .attr('cursor', 'pointer')
-          .data('spreadX', xPos - (radius * .5))
-          .data('spreadY', yPos - (radius * 1.5))
+          .data('spreadX', xPos - (radius * .5) + 1)
+          .data('spreadY', yPos - (radius * 1.5) + 1)
           .data('name', reordered[i].name);
         
         // Fade in image
