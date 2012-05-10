@@ -552,6 +552,10 @@
             return false;
           }
         });
+      },
+      
+      comparator: function(bill) {
+        return bill.get('bill_status');
       }
     });
     
