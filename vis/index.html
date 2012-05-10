@@ -229,6 +229,7 @@
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
   margin-bottom: -5px;
+  padding-right: .25em;
 }
 
 .bs-icon {
@@ -446,6 +447,9 @@
 <script id="template-category" type="text/template">
   <a class="all-categories" href="#all-categories">&lt; back</a>
   <h3>
+    <% if (typeof image_url != 'undefined') { %>
+      <img class="category-image" src="<%= image_url %>" /> 
+    <% } %>
     <% if (typeof sponsor != 'undefined' && typeof sponsor[2] != 'undefined') { %>
       <img class="category-image" src="<%= sponsor[2] %>" /> 
     <% } %>
@@ -750,7 +754,9 @@
         }
         else {
           this.collection.reset(filtered);
-          this.showCategory({ category: category });
+          var image = 'https://s3.amazonaws.com/data.minnpost/projects/mn-legislature-roundup-2012/icons/' + 
+            this.getCatIcon(category) + '.png';
+          this.showCategory({ category: category, image_url: image });
           this.render();
           this.showFirstBill();
         }
