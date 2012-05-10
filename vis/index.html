@@ -79,7 +79,7 @@
 #application-nav ul li a.tab-active,
 #application-nav ul li a.tab-active:hover {
    font-weight:bold;
-   border-bottom: 4px solid #222222;
+   border-bottom: 3px solid #999999;
    opacity: 1;
 }
 
@@ -132,9 +132,9 @@
 #bills-list-container .bills-list {
   height: 417px;
   overflow: auto;
-  border-top: 1px solid #EBEBEB;
-  border-left: 1px solid #EBEBEB;
-  border-bottom: 1px solid #EBEBEB;
+  border-top: 1px solid #ECECEC;
+  border-left: 1px solid #ECECEC;
+  border-bottom: 1px solid #ECECEC;
   direction: rtl;
 }
 #bills-list-container ul,
@@ -159,18 +159,20 @@
   float: left;
   font-size: .85em;
   margin: .5em 0 0 2.5%;
+  font-family: NimbusSanNovConD-Bol,Helvetica,Arial,Geneva,sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 #bill-category-container h3 {
   text-align: center;
-  padding: 1.5em 0 .5em 0;
+  padding: 2em 0 1em 0;
 }
 .bill-details-wrapper {
-  margin: 1em;
   padding: 1em;
   background-color: #FFFFFF;
 }
 #bill-detail-container {
-  background-color: #CDCDD0;
+  border: 1px solid #ECECEC;
 }
 #bill-detail-container .bill-status {
   float: right;
@@ -284,8 +286,8 @@
 <div id="minnpost-legislature-wrapper" class="content node-field-body">
   <div id="application-nav">
     <ul>
-      <li class="tab-active"><a class="by-category tab-active" href="#by-category"><span>By category</span></a></li>
-      <li><a class="by-address" href="#by-address"><span>By address</span></a></li>
+      <li class="tab-active"><a class="by-category tab-active" href="#by-category"><span>Explore by category</span></a></li>
+      <li><a class="by-address" href="#by-address"><span>Find by sponsor</span></a></li>
     </ul>
   </div>
   
@@ -418,7 +420,7 @@
 
 <!-- Template for category -->
 <script id="template-category" type="text/template">
-  <a class="all-categories" href="#all-categories">&lt;-- back</a>
+  <a class="all-categories" href="#all-categories">&lt; back</a>
   <h3><% if (typeof image_url != 'undefined') { %><img class="category-image" src="<%= image_url %>" /> <% } %> <%= category %></h3>
 </script>
 <!-- End templates -->
