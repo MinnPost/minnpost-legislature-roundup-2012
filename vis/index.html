@@ -130,14 +130,26 @@
 #bills-list-container .bills-list {
   height: 417px;
   overflow: auto;
-  border: 1px solid #CFCFCF;
   direction: rtl;
+}
+#bills-list-container .bills-list.is-scrolling {
+  -moz-box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  -webkit-box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  border-right: 1px solid #E7E7E9;
+  border-left: 1px solid #E7E7E9;
+  border-top: 1px solid #B3B3B7;
+  border-bottom: 1px solid #B3B3B7;
 }
 #bills-list-container ul,
 #bills-list-container ul li {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+#bills-list-container ul {
+  padding: .5em 0;
+  border-right: 1px solid #CDCDD0;
 }
 #bills-list-container ul li {
   direction: ltr;
@@ -704,6 +716,13 @@
         // Render template
         var template = _.template($("#template-bill-list").html(), { bills: this.collection.models });
         this.listContainer.html(template);
+
+        // Figure if we are scrolling.  Height on ul is not working,
+        // so we count the li's.  :(
+        var size = $('.bills-list ul li').size();
+        if (size > 16) {
+          $('.bills-list').addClass('is-scrolling');
+        }
         
         return this;
       },
