@@ -203,11 +203,40 @@
 #bill-detail-container .bill-house h5 {
   margin-right: 1em;
 }
+#bill-detail-container .bill-timeline {
+  margin: 1.5em 0 3em 0;
+}
+#bill-detail-container .bill-timeline p {
+  margin-bottom: 0;
+  text-align: center;
+}
+#bill-detail-container .bill-timeline .timeline-days {
+  font-weight: bold;
+}
+#bill-detail-container .session-start,
+#bill-detail-container .session-end {
+  width: 10%;
+  float: left;
+  color: #C3C3C3;
+  line-height: 1.5em;
+  font-size: .75em;
+  vertical-align: middle;
+}
+#bill-detail-container .session-start span,
+#bill-detail-container .session-end span {
+  padding: 0 6px;
+}
+#bill-detail-container .session-start {
+  text-align: right;
+}
+#bill-detail-container .session-end  {
+  text-align: left;
+}
 #bill-detail-container .bill-timeline-container {
-  width: 100%;
+  width: 80%;
+  float: left;
   height: 1.5em;
   background-color: #C3C3C3;
-  margin: 2.5em 0;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -215,7 +244,7 @@
 #bill-detail-container .bill-timeline-interval {
   width: 50px;
   height: 1.5em;
-  background-color: #10517F;
+  background-color: #7525E4;
   margin-left: 20px;
   border-radius: 3px;
   -webkit-border-radius: 3px;
@@ -362,10 +391,18 @@
     
     <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
       <div class="bill-timeline">
-        <h5>Time: <%= bill.getDays() %> days</h5>
+        <p>This bill had <span class="timeline-days"><%= bill.getDays() %> days</span> of consideration.</p>
+        <div class="session-start">
+          <span>Jan 24</span>
+        </div>
         <div class="bill-timeline-container">
           <div style="width: <%= bill.getIntervalPercentage() * 100 %>%; margin-left: <%= bill.getStartPercentage() * 100 %>%;" class="bill-timeline-interval">
+          </div>
         </div>
+        <div class="session-end">
+          <span>May 10</span>
+        </div>
+        <br class="clear" />
       </div>
     <% } %>
     
