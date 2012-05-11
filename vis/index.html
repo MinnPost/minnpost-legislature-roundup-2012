@@ -541,9 +541,9 @@
       <div class="bill-categories">
         Categories: 
         <ul>
-          <% _.each( bill.get('categories'), function( c ) { %>
+          <% _.each( bill.get('categories'), function( c, i, list ) { %>
             <li>
-              <a href="#<%= c %>" data-category="<%= c %>"><%= c %></a>
+              <a href="#<%= c %>" data-category="<%= c %>"><%= c %></a><% if (i < list.length - 1) { %>,<% } %>
             </li>
           <% }); %>
         </ul>
