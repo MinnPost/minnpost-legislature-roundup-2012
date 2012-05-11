@@ -381,7 +381,7 @@
   -moz-border-radius: 3px;
 }
 </style>
-<!--[if IE]>
+<!--[if lte IE 7]>
   <style type="text/css">
     #bill-detail-container .bill-timeline-container {
       width: 78%;
@@ -1122,6 +1122,7 @@
             'cy': el.data('spreadY')
           }, 1000, 'backOut');
           el.animate(spread.delay(Math.random() * 1000));
+          
         } 
         else if (el.type === 'text' || el.type === 'image') {
           var spread = Raphael.animation({
@@ -1139,9 +1140,15 @@
       var words = text.split(' ');
       var tempText = '';
       
+      // Opera does not like Raphaels bbox command so
+      // we just bypass this
+      if ($.browser.opera) {
+        return textObject.attr('text', text);
+      }
+      
       for (var i = 0; i < words.length; i++) {
         textObject.attr('text', tempText + ' ' + words[i]);
-        if (textObject.getBBox().width > maxWidth) {
+        if (textObject.getBBox(true).width > maxWidth) {
           tempText += '\n' + words[i];
         }
         else {
