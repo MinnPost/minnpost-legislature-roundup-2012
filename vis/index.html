@@ -391,7 +391,11 @@
     
     <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
       <div class="bill-timeline">
-        <p>This bill had <span class="timeline-days"><%= bill.getDays() %> days</span> of consideration.</p>
+        <% if (bill.get('bill_status') == 'signed') { %>
+          <p>This bill took about <span class="timeline-days"><%= bill.getDays() %> days</span> to become law.</p>
+        <% } else { %>
+          <p>This bill was considered for at least <span class="timeline-days"><%= bill.getDays() %> days</span>.</p>
+        <% } %>
         <div class="session-start">
           <span>Jan 24</span>
         </div>
