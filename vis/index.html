@@ -32,7 +32,7 @@
   font-size: .75em;
   font-style: italic;
   color: #414141;
-  margin-top: 1em;
+  margin-top: 5em;
   clear: both;
 }
 
@@ -109,30 +109,17 @@
   width: 100%;
 }
 #bills-list-container {
-  width: 20%;
+  width: 15%;
   float: left;
 }
 #bill-detail-container {
-  width: 80%;
+  width: 85%;
   float: left;
 }
 
 /**
  * Bills
  */
-.bill-votes div {
-  font-size: 2.5em;
-  line-height: 1.5em;
-  margin-bottom: .5em;
-}
-.bill-id {
-  margin-bottom: 1em;
-}
-.bill-house,
-.bill-senate {
-  width: 50%;
-  float: left;
-}
 #bills-list-container {
   padding-bottom: 1em;
 }
@@ -143,16 +130,26 @@
 #bills-list-container .bills-list {
   height: 417px;
   overflow: auto;
-  border-top: 1px solid #ECECEC;
-  border-left: 1px solid #ECECEC;
-  border-bottom: 1px solid #ECECEC;
   direction: rtl;
+}
+#bills-list-container .bills-list.is-scrolling {
+  -moz-box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  -webkit-box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  box-shadow: inset 0px 11px 10px -10px rgba(0, 0, 0, .4), inset 0px -11px 10px -10px rgba(0, 0, 0, .4);
+  border-right: 1px solid #E7E7E9;
+  border-left: 1px solid #E7E7E9;
+  border-top: 1px solid #B3B3B7;
+  border-bottom: 1px solid #B3B3B7;
 }
 #bills-list-container ul,
 #bills-list-container ul li {
   list-style: none;
   margin: 0;
   padding: 0;
+}
+#bills-list-container ul {
+  padding: .5em 0;
+  border-right: 1px solid #CDCDD0;
 }
 #bills-list-container ul li {
   direction: ltr;
@@ -167,25 +164,59 @@
 }
 
 #bill-category-container a {
+  display: block;
   float: left;
   font-size: .85em;
-  margin: .5em 0 0 2.5%;
   font-family: NimbusSanNovConD-Bol,Helvetica,Arial,Geneva,sans-serif;
-  font-weight: bold;
   text-transform: uppercase;
+  background-color: #801019;
+  background-color: rgba(128, 16, 25, 0.7);
+  color: #FFFFFF;
+  padding: 2px 8px;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  position: relative;
+  top: 3em;
+  left: 1em;
+}
+#bill-category-container a:hover {
+  background-color: #801019;
+}
+#bill-category-container a i {
+  margin: 0;
 }
 #bill-category-container h3 {
   text-align: center;
   padding: 2em 0 1em 0;
 }
 .bill-details-wrapper {
-  padding: 1em;
-  border: 1px solid #ECECEC;
+  padding-left: 2em;
+}
+#bill-detail-container .bill-votes div {
+  font-size: 2.5em;
+  line-height: 1.5em;
+  margin-bottom: .5em;
+}
+#bill-detail-container .bill-id {
+  margin-bottom: 1em;
+}
+#bill-detail-container .bill-house,
+#bill-detail-container .bill-senate {
+  width: 50%;
+  float: left;
+  text-align: center;
+}
+#bill-detail-container .bill-house ul,
+#bill-detail-container .bill-house ul li,
+#bill-detail-container .bill-senate ul,
+#bill-detail-container .bill-senate ul li {
+  list-style: none;
 }
 #bill-detail-container .bill-status {
   float: right;
   text-transform: uppercase;
-  margin: 0 0 .5em .5em; 
+  margin: 0 0 2em .5em; 
   font-size: 1em;
   padding: .5em 1.5em;
   background-color: #EBEBEB;
@@ -200,18 +231,13 @@
   margin-bottom: .75em;
 }
 #bill-detail-container h5 {
-  border-bottom: 3px solid #EBEBEB;
   margin-bottom: 1em;
-}
-
-#bill-detail-container .bill-title {
-  font-size: 1.25em;
 }
 #bill-detail-container .bill-house h5 {
   margin-right: 1em;
 }
 #bill-detail-container .bill-timeline {
-  margin: 1.5em 0 3em 0;
+  margin: 2.5em 0;
 }
 #bill-detail-container .bill-timeline p {
   margin-bottom: .25em;
@@ -251,12 +277,12 @@
 #bill-detail-container .bill-timeline-interval {
   width: 50px;
   height: 1.5em;
-  background-color: #7525E4;
   margin-left: 20px;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  opacity: 0.5;
+  background-color: #62619E;
+  background-color: rgba(98, 97, 158, 0.6);*/
 }
 #bill-category-container .category-image {
   width: 30px;
@@ -275,12 +301,15 @@
   height: 14px;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url("https://s3.amazonaws.com/data.minnpost/js/bootstrap-2.0.2/img/glyphicons-halflings.png");
+  background-image: url("https://s3.amazonaws.com/data.minnpost/js/bootstrap-2.0.3/img/glyphicons-halflings.png");
   background-position: 14px 14px;
   background-repeat: no-repeat;
   margin-right: 3px;
   margin-top: 2px;
   opacity: 0.8;
+}
+.bs-icon-white {
+  background-image: url("https://s3.amazonaws.com/data.minnpost/js/bootstrap-2.0.3/img/glyphicons-halflings-white.png");
 }
 .bs-icon-signed {
   background-position: -288px 0;
@@ -291,8 +320,26 @@
 .bs-icon-pending {
   background-position: -433px -96px;
 }
+.bs-icon-circle-arrow-left {
+  background-position: -264px -144px;
+}
+
 .bill-status .bs-icon {
   margin: 7px 0 0 5px;
+}
+
+.bill-categories {
+  margin-top: 2.5em;
+}
+.bill-categories ul {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+.bill-categories ul li {
+  list-style: none;
+  display: inline;
+  padding-right: .25em;
 }
 
 /**
@@ -394,7 +441,7 @@
   <div class="bill-details-wrapper">
     <div class="bill-status"><%= bill.get('bill_status') %> <i class="bs-icon bs-icon-<%= bill.get('bill_status') %>"></i></div>
     <h4 class="bill-title"><%= bill.get('bill') %></h4>
-    <p class="bill-description"><span class="bill-title"><%= bill.get('title') %></span> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">View bill status and details.</a></p>
+    <p class="bill-description"><span class="bill-title"><%= bill.get('title') %></span> [<a target="_blank" href="<%= bill.get('billurl') %>">view bill status and details</a>]</p>
     
     
     <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
@@ -422,7 +469,6 @@
     
     
     <div class="bill-house">
-      <h5>House</h5>
       <% if (typeof bill.get('house_ayes') != 'undefined') { %>
         <div class="bill-house-votes bill-votes">
           <div>
@@ -457,7 +503,6 @@
     </div>
   
     <div class="bill-senate">
-      <h5>Senate</h5>
       <% if (typeof bill.get('senate_ayes') != 'undefined') { %>
         <div class="bill-senate-votes bill-votes">
           <div>
@@ -491,12 +536,25 @@
       </div>
     </div>
     <br class="clear" />
+    
+    <% if (!_.isEmpty(bill.get('categories'))) { %>
+      <div class="bill-categories">
+        Categories: 
+        <ul>
+          <% _.each( bill.get('categories'), function( c, i, list ) { %>
+            <li>
+              <a href="#<%= c %>" data-category="<%= c %>"><%= c %></a><% if (i < list.length - 1) { %>,<% } %>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
   </div>
 </script>
 
 <!-- Template for category -->
 <script id="template-category" type="text/template">
-  <a class="all-categories" href="#all-categories">&lt; back</a>
+  <a class="all-categories" href="#all-categories"><i class="bs-icon bs-icon-white bs-icon-circle-arrow-left"></i> back</a>
   <h3>
     <% if (typeof image_url != 'undefined') { %>
       <img class="category-image" src="<%= image_url %>" /> 
@@ -684,6 +742,13 @@
         // Render template
         var template = _.template($("#template-bill-list").html(), { bills: this.collection.models });
         this.listContainer.html(template);
+
+        // Figure if we are scrolling.  Height on ul is not working,
+        // so we count the li's.  :(
+        var size = $('.bills-list ul li').size();
+        if (size > 16) {
+          $('.bills-list').addClass('is-scrolling');
+        }
         
         return this;
       },
@@ -694,6 +759,7 @@
         this.billView.model = this.collection.getByCid(thisElem.attr('data-id'));
         this.activateBill(thisElem);
         this.billView.render();
+        this.activateCategoryLinks();
         return this;
       },
       
@@ -701,7 +767,19 @@
         this.billView.model = this.collection.at(0);
         this.activateBill($('[data-id="' + this.billView.model.cid + '"]'));
         this.billView.render();
+        this.activateCategoryLinks();
         return this;
+      },
+      
+      activateCategoryLinks: function() {
+        var that = this;
+        // Hookup category links
+        $('.bill-categories ul a').click(function(e) {
+          e.preventDefault();
+          that.filterCategory($(this).attr('data-category'));
+        });
+        
+        return that;
       },
       
       activateBill: function(element) {
