@@ -186,12 +186,15 @@
   float: right;
   text-transform: uppercase;
   margin: 0 0 .5em .5em; 
-  font-size: 1.5em;
+  font-size: 1em;
   padding: .5em 1.5em;
   background-color: #EBEBEB;
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
+}
+#bill-detail-container .bill-status i {
+  margin: 2px 0 0 0;
 }
 #bill-detail-container h4 {
   margin-bottom: .75em;
@@ -200,6 +203,10 @@
   border-bottom: 3px solid #EBEBEB;
   margin-bottom: 1em;
 }
+
+#bill-detail-container .bill-title {
+  font-size: 1.25em;
+}
 #bill-detail-container .bill-house h5 {
   margin-right: 1em;
 }
@@ -207,7 +214,7 @@
   margin: 1.5em 0 3em 0;
 }
 #bill-detail-container .bill-timeline p {
-  margin-bottom: 0;
+  margin-bottom: .25em;
   text-align: center;
 }
 #bill-detail-container .bill-timeline .timeline-days {
@@ -249,6 +256,7 @@
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
+  opacity: 0.5;
 }
 #bill-category-container .category-image {
   width: 30px;
@@ -386,15 +394,17 @@
   <div class="bill-details-wrapper">
     <div class="bill-status"><%= bill.get('bill_status') %> <i class="bs-icon bs-icon-<%= bill.get('bill_status') %>"></i></div>
     <h4 class="bill-title"><%= bill.get('bill') %></h4>
-    <p class="bill-description"><%= bill.get('title') %> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">View bill status and details.</a></p>
+    <p class="bill-description"><span class="bill-title"><%= bill.get('title') %></span> <br /> <a target="_blank" href="<%= bill.get('billurl') %>">View bill status and details.</a></p>
     
     
     <% if (typeof bill.get('start_date') != 'undefined' && (bill.getDays() != NaN || bill.getDays() != 'NaN')) { %>
       <div class="bill-timeline">
         <% if (bill.get('bill_status') == 'signed') { %>
           <p>This bill took about <span class="timeline-days"><%= bill.getDays() %> days</span> to become law.</p>
-        <% } else { %>
+        <% } else if (bill.get('bill_status') == 'vetoed') { %>
           <p>This bill was considered for at least <span class="timeline-days"><%= bill.getDays() %> days</span>.</p>
+        <% } else { %>
+          <p>This bill has been considered for at least <span class="timeline-days"><%= bill.getDays() %> days</span>.</p>
         <% } %>
         <div class="session-start">
           <span>Jan 24</span>
