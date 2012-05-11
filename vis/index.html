@@ -432,7 +432,7 @@
     <br class="clear" />
   </div>
   
-  <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.  Note that some legislators are not properly linked to bills they sponsor and will affect the accuracy of the address search.  All icons from <a target="_blank" href="http://thenounproject.com/">The Noun Project</a>: Capital by Jonathan Keating; Wind Farm by Iconathon, Cree; House by Maurizio Pedrazzoli; Checkbox by The Noun Project; Tree by The Noun Project; Microscope by Stuart McCoy; Soldier by Simon Child; Piggy Bank by Brock Kenzler; Stock Exchange by Nacho; Theater by Karl Turner; Playing Cards by Jonathan C. Dietrich; Siren by ___Lo; Gavel by Connie Shu.</p>
+  <p class="footnote">Data from the <a target="_blank" href="http://www.leg.state.mn.us/">Minnesota Legislature</a> via the <a target="_blank" href="http://openstates.org/">Open States Project</a>.  Geocoding provided by <a target="_blank" href="https://www.mapquest.com/">Mapquest</a>.  Note that some legislators are not properly linked to bills they sponsor, which may affect the accuracy of the address search.  All icons from <a target="_blank" href="http://thenounproject.com/">The Noun Project</a>: Capital by Jonathan Keating; Wind Farm by Iconathon, Cree; House by Maurizio Pedrazzoli; Checkbox by The Noun Project; Tree by The Noun Project; Microscope by Stuart McCoy; Soldier by Simon Child; Piggy Bank by Brock Kenzler; Stock Exchange by Nacho; Theater by Karl Turner; Playing Cards by Jonathan C. Dietrich; Siren by ___Lo; Gavel by Connie Shu.</p>
 
 </div>
   
@@ -863,7 +863,7 @@
                 var name = names[names.length - 1];
                 var filtered = thisList.filterAuthor(name, type, true);
                 if (_.isEmpty(filtered)) {
-                  thisList.showError('No bills found sponsored by your legislator(s), <em>' + name + '</em>.  This could be an issue with the data quality and may not accurately reflect the activities of these legislator(s).');
+                  thisList.showError('There were no bills found that were sponsored by your legislator(s): <em>' + name + '</em>.  This could be an issue with the data quality and may not accurately reflect the activities of these legislator(s).');
                 }
                 else {
                   $('#address-chooser').slideUp('fast');
