@@ -92,11 +92,11 @@ def add_to_json(bills):
 
 	scraper_url = "http://api.scraperwiki.com/api/1.0/datastore/sqlite?format=jsondict&name=mn_bills&query=select%20*%20from%20%60swdata%60%20where%20bill%20IN%20('"
 	scraper_url += bill[0][0:2]
-	if len(bill[0][3:]) == 3: #if it's a 3-digit bill number, add a leading 0 to scraper url
-		scraper_url += '0'
-		scraper_url += bill[0][3:]
-	else:
-		scraper_url += bill[0][3:]
+#	if len(bill[0][3:]) == 3: #if it's a 3-digit bill number, add a leading 0 to scraper url
+#		scraper_url += '0'
+#		scraper_url += bill[0][3:]
+#	else:
+	scraper_url += bill[0][3:]
 	scraper_url += "')"
 	
 	response = urllib.urlopen(scraper_url)
@@ -116,13 +116,25 @@ def add_to_json(bills):
             
         sen_sponsor_ids = []
         for e in senate_sponsors:
-        	if e['name'] == 'Hayden': #sad little hack to fix Jeff Hayden's missing legid
-        		sen_sponsor_ids.append('MNL000364')
+        	if e['name'] == 'Hayden' or e['name'] == 'Ingebrigtsen' or e['name'] == 'Howe': #sad little hack to fix Jeff Hayden's missing legid
+        		if e['name'] == 'Hayden':
+        			sen_sponsor_ids.append('MNL000364')
+        		if e['name'] == 'Ingebrigtsen':
+        			sen_sponsor_ids.append('MNL000023')
+        		if e['name'] == 'Howe':
+        			sen_sponsor_ids.append('MNL000214')
+        	elif e['name'] == 'Pogemiller':
+        		sen_sponsor_ids.append('MNL000047')
         	else:
         		sen_sponsor_ids.append(e['leg_id']) #build list of leg ids and leg full names
         house_sponsor_ids = []
         for e in house_sponsors:
-            house_sponsor_ids.append(e['leg_id'])
+        	if e['name'] == 'Koenen':
+        		house_sponsor_ids.append('MNL000107')
+        	elif e['name'] == 'Hayden':
+        		house_sponsor_ids.append('MNL000189')
+        	else:
+        		house_sponsor_ids.append(e['leg_id'])
         
         house_sponsors = get_leg_info(house_sponsor_ids)
         senate_sponsors = get_leg_info(sen_sponsor_ids)
@@ -169,13 +181,22 @@ def get_leg_info(legids):
     for legislator in legids:
         if legislator in knownlegs:
             legs.append(knownlegs[legislator])
+        elif legislator == 'MNL000023': #HAAAAACK
+        	name = 'Bill G Ingebrigtsen'
+        	party = 'Republcan'
+        	photo = 'http://www.senate.leg.state.mn.us/graphics/11Ingebrigtsen.jpg'
+        	url = 'http://www.senate.mn/members/member_bio.php?mem_id=1120'
+        	legs.append([name, party, photo, url])
         else:
 			try:
 				legdata = sunlight.openstates.legislator_detail(legislator)
 				name = legdata['full_name']
 				party = legdata['party']
 				photo = legdata['photo_url']
-				url = legdata['url']
+				try:
+					url = legdata['url']
+				except:
+					url = ''
 				knownlegs[legislator] = [name, party, photo, url]
 				legs.append([name, party, photo, url])
 			except:
