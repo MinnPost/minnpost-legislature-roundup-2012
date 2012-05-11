@@ -155,6 +155,10 @@ def add_to_json(bills):
         for pendingbill in pendingbills:
         	if pendingbill[0] == bill[0]:
         		bill_status = 'pending'
+        		
+        #the Vikings stadium conference report has a funky description, so we override it to make things clear
+        if bill[0] = 'HF 2958':
+        	title = 'New National Football League stadium provided for in Minnesota; Minnesota Stadium Authority established, and Metropolitan Sports Facilities Commission abolished; local tax revenue use, electronic pull-tab games, electronic linked bingo games, and sports-themed tipboard games provided for; taxes conditional imposition and revenue collection provided; lawful gambling tax rates modified; bonds issued, and money appropriated.' 
         
         #create a dictionary of the bill info and write it to the all_bills dict
         billinfo = {}
