@@ -282,8 +282,8 @@
   border-radius: 3px;
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
-  background-color: #7525E4;
-  background-color: rgba(117, 37, 228, 0.5);
+  background-color: #4552E8;
+  background-color: rgba(69, 82, 232, 0.6);*/
 }
 #bill-category-container .category-image {
   width: 30px;
@@ -327,6 +327,20 @@
 
 .bill-status .bs-icon {
   margin: 7px 0 0 5px;
+}
+
+.bill-categories {
+  margin-top: 2.5em;
+}
+.bill-categories ul {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+.bill-categories ul li {
+  list-style: none;
+  display: inline;
+  padding-right: .25em;
 }
 
 /**
@@ -523,6 +537,19 @@
       </div>
     </div>
     <br class="clear" />
+    
+    <% if (!_.isEmpty(bill.get('categories'))) { %>
+      <div class="bill-categories">
+        Categories: 
+        <ul>
+          <% _.each( bill.get('categories'), function( c ) { %>
+            <li>
+              <a href="#<%= c %>" data-category="<%= c %>"><%= c %></a>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+    </div>
   </div>
 </script>
 
@@ -733,6 +760,7 @@
         this.billView.model = this.collection.getByCid(thisElem.attr('data-id'));
         this.activateBill(thisElem);
         this.billView.render();
+        this.activateCategoryLinks();
         return this;
       },
       
@@ -740,7 +768,19 @@
         this.billView.model = this.collection.at(0);
         this.activateBill($('[data-id="' + this.billView.model.cid + '"]'));
         this.billView.render();
+        this.activateCategoryLinks();
         return this;
+      },
+      
+      activateCategoryLinks: function() {
+        var that = this;
+        // Hookup category links
+        $('.bill-categories ul a').click(function(e) {
+          e.preventDefault();
+          that.filterCategory($(this).attr('data-category'));
+        });
+        
+        return that;
       },
       
       activateBill: function(element) {
