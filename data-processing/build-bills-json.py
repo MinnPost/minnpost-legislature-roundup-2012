@@ -256,7 +256,7 @@ def mp_categorize(subject_list):
 		'State Agencies' : '' , 
 		'Technology and Communication' : 'Energy and Technology' , 
 		'Trade' : 'Business and Economy' , 
-		'Transportation' : 'Transporation' , 
+		'Transportation' : 'Transportation' , 
 		'Welfare and Poverty' : 'Welfare and Poverty' 
 	}
 	
