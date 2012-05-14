@@ -127,6 +127,8 @@ def add_to_json(bills):
         			sen_sponsor_ids.append('MNL000214')
         	elif e['name'] == 'Pogemiller':
         		sen_sponsor_ids.append('MNL000047')
+        	elif e['name'] == 'Nelson':
+        		sen_sponsor_ids.append('MNL000219')
         	else:
         		sen_sponsor_ids.append(e['leg_id']) #build list of leg ids and leg full names
         house_sponsor_ids = []
@@ -256,7 +258,7 @@ def mp_categorize(subject_list):
 		'State Agencies' : '' , 
 		'Technology and Communication' : 'Energy and Technology' , 
 		'Trade' : 'Business and Economy' , 
-		'Transportation' : 'Transporation' , 
+		'Transportation' : 'Transportation' , 
 		'Welfare and Poverty' : 'Welfare and Poverty' 
 	}
 	
